@@ -45,3 +45,24 @@ footer p {
     color: white;
     text-align: center;
 }
+
+.title {
+    font-size: 120%;
+    text-decoration: underline;
+}
+
+button {
+    background-color: greenyellow;
+    border: solid 1px;
+    color: rgb(0, 0, 0);
+    padding: 15px 32px;
+    text-align: center;
+    text-decoration: none;
+    display: inline-block;
+    font-size: 16px;
+    margin: 4px 2px;
+    cursor: pointer;
+}
+button:hover {
+    background-color: aquamarine;
+}
