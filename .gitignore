@@ -1,1 +1,6 @@
-DS_Store
+.DS_Store
+
+package*
+node_modules
+
+src/wordList.txt
