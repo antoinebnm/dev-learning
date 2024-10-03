@@ -1372,3 +1372,5 @@ const wordList = [
     "Wronged",
     "Zealous"
 ];
+
+let scoreLog = [['Alpha', 4], ['Beta', 8], ['Gama', 77]];
