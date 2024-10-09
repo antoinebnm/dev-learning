@@ -1,12 +1,8 @@
 function checkWord(typedWord, wordToType) {
-    if (typedWord == wordToType) {
-        return true;
-    }
-
-    return false;
+    return (typedWord == wordToType);
 }
 
-function shuffle(array) {
+function shuffleWords(array) {
     var i = array.length,
         j = 0,
         temp;
@@ -25,68 +21,59 @@ function shuffle(array) {
     return array;
 }
 
-let timeZone = document.getElementById("time");
-function updateTimer (startTime) {
-    timeZone.textContent = Math.floor((new Date().getTime() - startTime) / 1000);
-}
-
-let scoreZone = document.getElementById("scoreZone");
-function scoreManager (userScore, action) {
-    switch (action) {
-        case "add":
-            userScore++;
-            break;
-        case "update":
-            scoreLog.push(userScore);
-            break;
-        default:
-            break;
-    }
-}
-
-function restart () {
-    document.getElementById("startGameButton").hidden = false;
-}
-
-let ranNums = Array.from({length: 10}, () => Math.floor(Math.random() * 1372));
-let zoneToType = document.getElementById("zoneToType");
-let wordToType = document.getElementById("wordToType");
-
 function main() {
-    document.getElementById("startGameButton").hidden = true;
+    const wordToType = document.getElementById("wordToType");
+    const zoneToType = document.getElementById("zoneToType");
+
+    const scoreDiv = document.getElementById("scoreDiv");
+    const timeDiv = document.getElementById("time");
+    const startButton = document.getElementById("startGameButton");
+    
+    const ranNums = shuffleWords(Array.from({length: 10}, () => Math.floor(Math.random() * 1372)));
 
     let userScore = 0;
     let userInput = '';
     let i = 0;
 
-    ranNums = shuffle(ranNums);
+    zoneToType.value = '';
+    zoneToType.hidden = false;
+    document.getElementById("label").textContent = 'Type here:';
+    zoneToType.focus();
+
+    const timeLimit = 10000;
+    let timeRemaining = timeLimit / 1000;
+    timeDiv.textContent = timeRemaining;
+    
+    startButton.hidden = true;
     wordToType.textContent = wordList[ranNums[i]];
-    var startTime = new Date().getTime();
-    updateTimer(startTime);
+        
+    const interval = setInterval(() => {
+        timeRemaining--;
+        timeDiv.textContent = timeRemaining;
+    }, 1000);
+
+    const timeout = setTimeout(() => {
+        console.log('Timeout');
+        zoneToType.hidden = true;
+        document.getElementById("label").textContent = 'Game Ended !';
+        clearTimeout(timeout);  // Arrêter le timer
+        clearInterval(interval);  // Arrêter la mise à jour du temps
+        scoreDiv.textContent = userScore;
+        
+        startButton.textContent = "Play Again ?";
+        startButton.hidden = false;
+    }, timeLimit);
 
     zoneToType.addEventListener('input', () => {
-        
         userInput = zoneToType.value;
 
         if (checkWord(userInput, wordList[ranNums[i]])){
             i++;
-
-            if (i === 5) {
-
-                zoneToType.hidden = true;
-                document.getElementById("label").textContent = 'Game End';
-                scoreManager(userScore, "update");
-            } else {
-
-                wordToType.textContent = wordList[ranNums[i]];
-                zoneToType.value = '';
-                scoreManager(userScore, 'add');
-            }
-            updateTimer(startTime);
+            wordToType.textContent = wordList[ranNums[i]];
+            zoneToType.value = '';
+            userScore++;
+            scoreDiv.textContent = userScore;
+            console.log('Score:', userScore);
         }
     });
-}
-
-function run () {
-    main();
 }

@@ -1,50 +1,49 @@
 <!DOCTYPE HTML>
 <html lang="fr-FR">
-	<head>
-		<meta charset="UTF-8">
-		<meta http-equiv="X-UA-Compatible" content="IE=edge">
-		<meta name="viewport" content="width=device-width, initial-scale=1.0">
-		<title>AzerType — 7 letters words Speed Typing Game</title>
-		<script src="scripts/config.js" defer></script>
-		<script src="scripts/main.js" defer></script>
-		<link href="static/main.css" rel="stylesheet" />
-		<link href="src/js.ico" rel="icon" />
-	</head>
-	<body>
-		<header class="banner">
-			<section>
-				<p>
-					AzerType — 7 letters words Speed Typing Game
-				</p>
-				</br>
-			</section>
-		</header>
-		<main>
-			<div>
-				<div>
-					<p class="title">Typing Speed Game</p>
-					<button id="startGameButton" onclick="main()" >Start Game</button>
-				</div>
-					<section>
-						<div>
-							<p>
-								Total Time: <span id="time"></span> second(s).</br>
-								Word to Type: <span id="wordToType"></span>
-							</p>
-							<p>
-								<label id="label" for="name">Type here:</label>
-								<input type="text" id="zoneToType" name="zoneToType" required minlength="4" maxlength="8" size="10" />
-							</p>
-						</div>
-					</section>
-			</div>
-		</main>
-		<footer class="banner">
-			<section>
-				<p>
+    <head>
+    	<meta charset="UTF-8">
+    	<meta http-equiv="X-UA-Compatible" content="IE=edge">
+    	<meta name="viewport" content="width=device-width, initial-scale=1.0">
+    	<title>AzerType — 7 letters words Speed Typing Game</title>
+    	<script src="../scripts/config.js" defer></script>
+    	<script src="../scripts/main.js" defer></script>
+    	<link href="../style/main.css" rel="stylesheet" />
+    	<link href="../src/js.ico" rel="icon" />
+    </head>
+    <body>
+    	<header class="banner">
+    	    <section>
+    	    	<h1>AzerType</h1>
+    	    	<p>7 letters words Speed Typing Game</p>
+    	    </section>
+    	</header>
+    	<main class="container">
+    	    <div class="game-box">
+    	    	<h2 class="title">Typing Speed Game</h2>
+    	    	<button id="startGameButton" onclick="main()" class="btn">Start Game</button>
+    	    	<!-- Nouveau bouton pour accéder au leaderboard -->
+    	    	<button onclick="window.location.href='scoreboard'" class="btn">View Leaderboard</button>
+    	    	<section class="game-info">
+    	    	    <p>
+						Time Remaining: <span id="time"></span> second(s)
+    	    	    </p>
+    	    	    <p>
+						Word to Type: <span id="wordToType">Ready?</span><br/>
+						Score: <span id="scoreDiv">0</span> point(s)
+    	    	    </p>
+    	    	    <div class="input-container">
+    	    	    	<label id="label" for="zoneToType">Type here:</label>
+    	    	    	<input type="text" id="zoneToType" name="zoneToType" required minlength="4" maxlength="8" size="10" />
+    	    	    </div>
+    	    	</section>
+    	    </div>
+    	</main>
+    	<footer class="banner">
+    	    <section>
+    	    	<p>
 					JavaScript project
 				</p>
-			</section>
-		</footer>
-	</body>
+    	    </section>
+    	</footer>
+    </body>
 </html>
