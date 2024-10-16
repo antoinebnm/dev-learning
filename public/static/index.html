@@ -18,12 +18,17 @@
             </section>
         </header>
         <main class="container">
+            <div>
+                <form id="getUsername" method="post">
+                    <input type="text" id="userNameField" name="username" autocomplete="username" />
+                    <input type="submit" id="registerButton" class="btn" value="Register your username" />
+                </form>
+            </div>
             <div class="game-box">
                 <h2 class="title">Typing Speed Game</h2>
                 <button id="startGameButton" onclick="run()" class="btn">Start Game</button>
                 <!-- Nouveau bouton pour accéder au leaderboard -->
                 <button onclick="window.location.href='scoreboard'" class="btn">View Leaderboard</button>
-                <button id="registerResultButton" onclick="registerResult()" class="btn" hidden>Register your score ?</button>
                 <section class="game-info">
                     <p>
                         Time Remaining: <span id="time"></span> second(s)

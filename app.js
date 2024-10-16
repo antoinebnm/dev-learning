@@ -23,20 +23,20 @@ app.use(express.static(path.join(__dirname, "public")));
 /**
  * Router Setup
  */
-const indexRouter = require("./routes/index");
-const scoreboardRouter = require("./routes/scoreboard");
-app.use('/', indexRouter);
-app.use('/scoreboard', scoreboardRouter);
+const router = require("./public/scripts/routes");
+app.use('/', router);
+app.use('/scorebosard', router);
+
+app.use('/user/:name/:score', router);
 
 /**
  * Mongoose Connection Setup
  */
 const mongoose = require("mongoose");
-const User = require("./models/user");
 mongoose.set("strictQuery", false);
 
 require('dotenv').config();
-const DBname = "learning"
+const DBname = "learning";
 const mongoDB = process.env.MONGODB_TOKEN + DBname + "?retryWrites=true&w=majority&appName=Cluster0" ;
 
 main().catch((err) => console.log(err));

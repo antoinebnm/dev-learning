@@ -21,11 +21,18 @@ function shuffleWords(array) {
     return array;
 }
 
-const registerResultButton = document.getElementById("registerResultButton");
-function registerResult() {
-    registerResultButton.hidden = true;
-    var _pnyme = prompt('Quel est ton pseudonyme ?');
-}
+const getUsername = document.getElementById('getUsername');
+getUsername.addEventListener("submit", (event) => {
+
+    event.preventDefault();
+    const userNameField = document.getElementById('userNameField');
+    if (userNameField.value == '') {
+        alert("Username Field can't be empty!")
+        return;
+    }
+    userNameField.disabled = true;
+    registerButton.hidden = true;
+})
 
 function run() {
     const wordToType = document.getElementById("wordToType");
@@ -34,11 +41,10 @@ function run() {
     const scoreDiv = document.getElementById("scoreDiv");
     const timeDiv = document.getElementById("time");
     const startButton = document.getElementById("startGameButton");
-
-    registerResultButton.hidden = false;
     
     const ranNums = shuffleWords(Array.from({length: 10}, () => Math.floor(Math.random() * 1372)));
 
+    const userName = userNameField.value;
     let userScore = 0;
     let userInput = '';
     let i = 0;
@@ -54,7 +60,7 @@ function run() {
     
     startButton.hidden = true;
     wordToType.textContent = wordList[ranNums[i]];
-        
+    
     const interval = setInterval(() => {
         timeRemaining--;
         timeDiv.textContent = timeRemaining;
@@ -70,6 +76,7 @@ function run() {
         
         startButton.textContent = "Play Again ?";
         startButton.hidden = false;
+        window.location.replace('/user/' + userName + '/' + userScore);
     }, timeLimit);
 
     zoneToType.addEventListener('input', () => {
