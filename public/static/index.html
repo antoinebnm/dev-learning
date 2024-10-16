@@ -6,7 +6,7 @@
         <meta name="viewport" content="width=device-width, initial-scale=1.0">
         <title>AzerType — 7 letters words Speed Typing Game</title>
         <script src="../scripts/config.js" defer></script>
-        <script src="../scripts/main.js" defer></script>
+        <script src="../scripts/index.js" defer></script>
         <link href="../style/main.css" rel="stylesheet" />
         <link href="../src/js.ico" rel="icon" />
     </head>
@@ -20,9 +20,10 @@
         <main class="container">
             <div class="game-box">
                 <h2 class="title">Typing Speed Game</h2>
-                <button id="startGameButton" onclick="main()" class="btn">Start Game</button>
+                <button id="startGameButton" onclick="run()" class="btn">Start Game</button>
                 <!-- Nouveau bouton pour accéder au leaderboard -->
                 <button onclick="window.location.href='scoreboard'" class="btn">View Leaderboard</button>
+                <button id="registerResultButton" onclick="registerResult()" class="btn" hidden>Register your score ?</button>
                 <section class="game-info">
                     <p>
                         Time Remaining: <span id="time"></span> second(s)

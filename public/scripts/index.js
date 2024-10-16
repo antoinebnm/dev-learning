@@ -21,13 +21,21 @@ function shuffleWords(array) {
     return array;
 }
 
-function main() {
+const registerResultButton = document.getElementById("registerResultButton");
+function registerResult() {
+    registerResultButton.hidden = true;
+    var _pnyme = prompt('Quel est ton pseudonyme ?');
+}
+
+function run() {
     const wordToType = document.getElementById("wordToType");
     const zoneToType = document.getElementById("zoneToType");
 
     const scoreDiv = document.getElementById("scoreDiv");
     const timeDiv = document.getElementById("time");
     const startButton = document.getElementById("startGameButton");
+
+    registerResultButton.hidden = false;
     
     const ranNums = shuffleWords(Array.from({length: 10}, () => Math.floor(Math.random() * 1372)));
 
