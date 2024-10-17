@@ -25,9 +25,6 @@ app.use(express.static(path.join(__dirname, "public")));
  */
 const router = require("./public/scripts/routes");
 app.use('/', router);
-app.use('/scorebosard', router);
-
-app.use('/user/:name/:score', router);
 
 /**
  * Mongoose Connection Setup

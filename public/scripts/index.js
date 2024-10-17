@@ -76,7 +76,7 @@ function run() {
         
         startButton.textContent = "Play Again ?";
         startButton.hidden = false;
-        myRedirect('/user/create/' + userName + '/' + userScore, 'userDB', 'create');
+        myRedirect('/api/users/add/' + userName + '/' + userScore, 'userDB', 'add');
         //=> window.location.replace('/user/create/' + userName + '/' + userScore);
     }, timeLimit);
 

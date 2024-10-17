@@ -33,6 +33,12 @@
                 </table>
                 <button onclick="window.location.href='/'" class="btn">Return to Game</button>
             </div>
+            <form hidden class="apiRequests" method="post">
+                <label id="apiReq" for="apiReqInput">Type here:</label>
+                <input type="text" id="apiReqInput" name="apiReqInput" required size="80" value="/api/users/"/>
+                <input type="number" id="apiReqScoreInput" name="apiReqScoreInput" value=0 />
+                <input type="submit" id="sendApiReq" class="btn" name="sendApiReq" onclick="myRedirect(document.getElementById(apiReqInput).value + document.getElementById(apiReqScoreInput).value, 'apiReq', 'apiReq')" />
+            </form>
         </main>
         <footer class="banner">
                 <section>

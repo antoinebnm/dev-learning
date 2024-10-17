@@ -4,12 +4,12 @@ async function fetchPlayers() {
     try {
         const response = await fetch("/api/scoreboard");
         if (!response.ok) {
-            throw new Error("Erreur lors de la récupération des données");
+            throw new Error(response);
         }
         const players = await response.json();
         updateTable(players);
     } catch (error) {
-        console.error("Erreur :", error);
+        console.error("Error :", error);
     }
 }
 
