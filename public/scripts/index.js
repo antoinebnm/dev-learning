@@ -76,7 +76,8 @@ function run() {
         
         startButton.textContent = "Play Again ?";
         startButton.hidden = false;
-        window.location.replace('/user/' + userName + '/' + userScore);
+        myRedirect('/user/create/' + userName + '/' + userScore, 'userDB', 'create');
+        //=> window.location.replace('/user/create/' + userName + '/' + userScore);
     }, timeLimit);
 
     zoneToType.addEventListener('input', () => {
