@@ -3,10 +3,12 @@ const mongoose = require("mongoose");
 const Schema = mongoose.Schema;
 
 const userSchema = new Schema({
-    userName: { type: String, required: true, minLength: 1, maxLength: 16 },
-    userScore: { type: Number, required: true, min: 0 },
-    dateOfEntry: { type: Date, required: true },
-    //_ip: { type: String, required: true },
+    displayName: { type: String, required: true, minLength: 1, maxLength: 16 },
+    credentials: {
+        login: { type: String },
+        password: { type: String }},
+    addedAt: { type: Date, required: true },
+    gamesPlayed: { type: Schema.Types.Mixed },
 }, { versionKey: false });
 
 // Export model
