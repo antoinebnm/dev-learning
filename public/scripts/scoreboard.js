@@ -1,31 +1,35 @@
 let tbody = document.querySelector("tbody");
+let thead = document.querySelector("thead");
 
-async function fetchPlayers() {
-    try {
-        const response = await fetch("/api/scoreboard");
-        if (!response.ok) {
-            throw new Error(response);
-        }
-        const players = await response.json();
-        updateTable(players);
-    } catch (error) {
-        console.error("Error :", error);
-    }
-}
+var header = `
+    <tr>
+        <th>Name</th>
+        <th>Played</th>
+        <th>Score</th>
+        <th>Duration</th>
+    </tr>
+    `;
+tbody.innerHTML = header;
 
-function updateTable(players) {
+
+function updateTable(players, gameType) {
     let row = ``;
+    console.log('Player Array: ' + players);
     players.forEach(element => {
-        row += `
-        <tr>
-            <td>${element.userName}</td>
-            <td>${element.userScore}</td>
-            <td>${new Date(element.dateOfEntry).toLocaleDateString()}</td>
-        </tr>
-        `;
+        element.gamesPlayed.forEach(game => {
+            if (game.type == gameType) {
+                row += `
+                <tr>
+                    <td>${element.displayName}</td>
+                    <td>${new Date(game.dateOfEntry).toLocaleDateString()}</td>
+                    <td>${game.score}</td>
+                    <td>${game.time}</td>
+                </tr>`
+            }});
     });
     tbody.innerHTML = row;
 }
 
-// Appelle la fonction pour récupérer les données et mettre à jour le tableau
-fetchPlayers();
+// Appelle la fonction pour récupérer les données et mettre à jour le tableau (à chaque chargement de la page scoreboard)
+var data = fetchAPI('users', ['read','all']);
+updateTable(data, 'chrono');

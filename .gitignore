@@ -6,4 +6,3 @@ package*
 node_modules
 
 src/wordList.txt
-public/scripts/config.js

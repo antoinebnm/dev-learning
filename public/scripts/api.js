@@ -1,14 +1,25 @@
 const express = require("express");
 const api = express.Router();
-const path = require("path");
 const User = require("../../models/user");
 const Game = require("../../models/game");
 
-api.post("/api/users/:action/:id/:attribute?/:value?", async (req, res, next) => {
-    console.log('>>>>>>>>>>> Request Type:', req.method, '| Action:', req.params.action);
+api.use('/:url?', (req, res, next) => {
+    const url = req.params.url || 'none';
+    console.log('>>>>>>>>>>> Request Type:', req.method, '| URL:', url);
+    next();
+})
+
+api.post("/users/:action/:id/:attribute?/:value?", async (req, res, next) => {
     switch (req.params.action) {
-        case 'add': //id here is the display name & login                           //attribute = password here -> value unused
-            new User({ displayName:req.params.id, credentials:{login:req.params.id, password:req.params.attribute}, addedAt:new Date() }).save();
+        case 'add':
+            const existingUser = (await User.findOne({ 'credentials.login':req.params.id }) === null) ? false : true;
+            if (!existingUser) {
+                        //id here is the display name & login                           //attribute = password here -> value unused
+                new User({ displayName:req.params.id, credentials:{login:req.params.id, password:req.params.attribute}, addedAt:new Date(), gamesPlayed:[] }).save();
+                res.status(200).json({message:"Your account just have been created !"});
+            } else {
+                res.status(401).json({error:"This username is already used. Please chose another one."});
+            }
             break;
 
         case 'update': //id here is the DB id / user token
@@ -25,7 +36,7 @@ api.post("/api/users/:action/:id/:attribute?/:value?", async (req, res, next) =>
                         break;
                         
                     case 'games':
-                        let gamesHistory = User.findOne({ _id:req.params.id }).get('playedGames');
+                        let gamesHistory = await User.findOne({ _id:req.params.id }).get('gamesPlayed');
                         const newGame = await Game.findById(req.params.value);
                         gamesHistory.push(newGame);
                         await User.updateOne({ _id:req.params.id }, { 
@@ -41,28 +52,53 @@ api.post("/api/users/:action/:id/:attribute?/:value?", async (req, res, next) =>
             break;
 
         case 'delete': //id here is the DB id / user token
-            await User.deleteOne({ _id:req.params.id });
+            try {
+                await User.deleteOne({ _id:req.params.id });
+                res.status(200).redirect("/");
+            } catch (error) {
+                res.status(500).json({ error: "Error when retrieving data" });
+            }
             break;
+
+        case 'read':
+            try {
+                if (req.params.id == 'all') {
+                    const users = await User.find(); // Trouve les users
+                    res.status(200).json(users);
+                    
+                } else {
+                    const user = await User.findOne({ _id:req.params.id });
+                    if (user.credentials.password == req.params.attribute) {
+                        res.status(200).json(user);
+                    } else {
+                        res.status(401).json({ error: "Unauthorized" });
+                    }
+                }
+            } catch (error) {
+                res.status(500).json({ error: "Error when retrieving data" });
+            }
+            
             
         default:
             break;
     }
-    res.status(200).redirect('/scoreboard');
 });
 
 // API for user score fetch
-api.use("/api/scoreboard/:filtre?", async (req, res, next) => {
+api.use("/scoreboard/:gameType?/:filtre?", async (req, res, next) => {
+    const gameType = req.params.gameType || 'chrono';
+    const filter = req.params.filtre || 'reverse';
+    console.log(`Game: ${gameType} | Filter: ${filter}`);
     try {
-        const users = await User.find(); // Trouve les users
-        switch (req.params.filtre) {
+        switch (filter) {
             case 'reverse':
-                users.sort({ userScore: -1 });
+                //users.sort({ userScore: -1 });
                 break;
         
             default:
                 break;
         }
-        res.json(users); // Renvoie les utilisateurs en format JSON
+        //res.json(users); // Renvoie les utilisateurs en format JSON
 
     } catch (error) {
         res.status(500).json({ error: "Error when retrieving data" });

@@ -21,18 +21,57 @@ function shuffleWords(array) {
     return array;
 }
 
-const getUsername = document.getElementById('getUsername');
-getUsername.addEventListener("submit", (event) => {
+// Sélection des éléments du DOM
+const loginButton = document.getElementById("loginButton");
+const registerButton = document.getElementById("registerButton");
+const authPopup = document.getElementById("authPopup");
+const closeBtn = document.querySelector(".close-btn");
+const authTitle = document.getElementById("authTitle");
+const authForm = document.getElementById("authForm");
 
-    event.preventDefault();
-    const userNameField = document.getElementById('userNameField');
-    if (userNameField.value == '') {
-        alert("Username Field can't be empty!")
-        return;
+// Fonction pour ouvrir le popup
+function openPopup(type) {
+    authPopup.style.display = "flex";
+    authTitle.textContent = type === "login" ? "Login" : "Register";
+}
+
+// Fonction pour fermer le popup
+function closePopup() {
+    authPopup.style.display = "none";
+}
+
+// Événements pour ouvrir et fermer le popup
+loginButton.addEventListener("click", () => openPopup("login"));
+registerButton.addEventListener("click", () => openPopup("register"));
+closeBtn.addEventListener("click", closePopup);
+
+// Fermer le popup si on clique en dehors du contenu
+window.addEventListener("click", (event) => {
+    if (event.target === authPopup) {
+        closePopup();
     }
-    userNameField.disabled = true;
-    registerButton.hidden = true;
-})
+});
+
+// Soumission du formulaire d'authentification
+authForm.addEventListener("submit", (event) => {
+    event.preventDefault();
+    const username = document.getElementById("username").value;
+    const password = document.getElementById("password").value;
+    // Ajouter la logique de connexion/inscription ici
+    const action = (authTitle.textContent == 'Login') ? 'read' : 'add';
+    try {
+        const user = fetchAPI('users', [action, username, password]);
+        console.log(user);
+    } catch (error) {
+        myRedirect('/', 'index', 'redirect');
+        console.log(error + "Something went wrong!");
+    }
+    
+    // clear fields
+    document.getElementById("username").value = '';
+    document.getElementById("password").value = '';
+    closePopup();
+});
 
 function run() {
     const wordToType = document.getElementById("wordToType");
@@ -41,10 +80,11 @@ function run() {
     const scoreDiv = document.getElementById("scoreDiv");
     const timeDiv = document.getElementById("time");
     const startButton = document.getElementById("startGameButton");
-    
-    const ranNums = shuffleWords(Array.from({length: 10}, () => Math.floor(Math.random() * 1372)));
 
-    const userName = userNameField.value;
+    let _x = 10;
+    
+    const ranNums = shuffleWords(Array.from({length: _x}, () => Math.floor(Math.random() * 1372)));
+
     let userScore = 0;
     let userInput = '';
     let i = 0;
@@ -76,8 +116,6 @@ function run() {
         
         startButton.textContent = "Play Again ?";
         startButton.hidden = false;
-        myRedirect('/api/users/add/' + userName + '/' + userScore, 'userDB', 'add');
-        //=> window.location.replace('/user/create/' + userName + '/' + userScore);
     }, timeLimit);
 
     zoneToType.addEventListener('input', () => {

@@ -8,37 +8,30 @@
         <script src="../scripts/config.js" defer></script>
         <script src="../scripts/scoreboard.js" defer></script>
         <link href="../style/main.css" rel="stylesheet" />
+        <link href="../style/board.css" rel="stylesheet" />
         <link href="../src/js.ico" rel="icon" />
     </head>
     <body>
         <header class="banner">
             <section>
-                <h1>Leaderboard</h1>
+                <h1>Games History</h1><br />
             </section>
+            <div id="homeButton">
+                <a href="/"><img src="../src/house_icon.png" alt="Home button" height="64" /></a>
+            </div>
         </header>
         <main class="container">
             <div class="leaderboard-box">
                 <table id="leaderboard" class="table-fill">
                     <h2 class="table-title">Top Scores</h2>
                     <thead>
-                        <tr>
-                            <th>Name</th>
-                            <th>Score</th>
-                            <th>Date</th>
-                        </tr>
+                    <!-- Add custom header -->
                     </thead>
                     <tbody class="table-hover">
                     <!-- Add players dynamically -->
                     </tbody>
                 </table>
-                <button onclick="window.location.href='/'" class="btn">Return to Game</button>
             </div>
-            <form hidden class="apiRequests" method="post">
-                <label id="apiReq" for="apiReqInput">Type here:</label>
-                <input type="text" id="apiReqInput" name="apiReqInput" required size="80" value="/api/users/"/>
-                <input type="number" id="apiReqScoreInput" name="apiReqScoreInput" value=0 />
-                <input type="submit" id="sendApiReq" class="btn" name="sendApiReq" onclick="myRedirect(document.getElementById(apiReqInput).value + document.getElementById(apiReqScoreInput).value, 'apiReq', 'apiReq')" />
-            </form>
         </main>
         <footer class="banner">
                 <section>

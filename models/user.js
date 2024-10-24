@@ -5,10 +5,10 @@ const Schema = mongoose.Schema;
 const userSchema = new Schema({
     displayName: { type: String, required: true, minLength: 1, maxLength: 16 },
     credentials: {
-        login: { type: String },
-        password: { type: String }},
+        login: { type: String, required: true },
+        password: { type: String, required: true }},
     addedAt: { type: Date, required: true },
-    gamesPlayed: { type: Schema.Types.Mixed },
+    gamesPlayed: { type: Schema.Types.Mixed, required: true },
 }, { versionKey: false });
 
 // Export model
