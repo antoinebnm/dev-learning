@@ -9,7 +9,7 @@ var header = `
         <th>Duration</th>
     </tr>
     `;
-tbody.innerHTML = header;
+thead.innerHTML = header;
 
 
 function updateTable(players, gameType) {

@@ -12,13 +12,17 @@ api.use('/:url?', (req, res, next) => {
 api.post("/users/:action/:id/:attribute?/:value?", async (req, res, next) => {
     switch (req.params.action) {
         case 'add':
-            const existingUser = (await User.findOne({ 'credentials.login':req.params.id }) === null) ? false : true;
-            if (!existingUser) {
-                        //id here is the display name & login                           //attribute = password here -> value unused
-                new User({ displayName:req.params.id, credentials:{login:req.params.id, password:req.params.attribute}, addedAt:new Date(), gamesPlayed:[] }).save();
-                res.status(200).json({message:"Your account just have been created !"});
-            } else {
-                res.status(401).json({error:"This username is already used. Please chose another one."});
+            try {
+                const existingUser = (await User.findOne({ 'credentials.login':req.params.id }) === null) ? false : true;
+                if (!existingUser) {
+                            //id here is the display name & login                           //attribute = password here -> value unused
+                    new User({ displayName:req.params.id, credentials:{login:req.params.id, password:req.params.attribute}, addedAt:new Date(), gamesPlayed:[] }).save();
+                    res.status(200).json({message:"Your account just have been created !"});
+                } else {
+                    res.status(401).json({error:"This username is already used. Please chose another one."});
+                }
+            } catch (error) {
+                res.status(400).json({ error: "Bad request" });
             }
             break;
 
@@ -67,9 +71,13 @@ api.post("/users/:action/:id/:attribute?/:value?", async (req, res, next) => {
                     res.status(200).json(users);
                     
                 } else {
-                    const user = await User.findOne({ _id:req.params.id });
-                    if (user.credentials.password == req.params.attribute) {
+                    const user = await User.findOne({ 'credentials.login':req.params.id });
+                    if (req.params.attribute === undefined) {
+                        res.status(400).json({ error: "Bad request" });
+
+                    } else if (user.credentials.password == req.params.attribute) {
                         res.status(200).json(user);
+
                     } else {
                         res.status(401).json({ error: "Unauthorized" });
                     }
@@ -77,7 +85,6 @@ api.post("/users/:action/:id/:attribute?/:value?", async (req, res, next) => {
             } catch (error) {
                 res.status(500).json({ error: "Error when retrieving data" });
             }
-            
             
         default:
             break;
