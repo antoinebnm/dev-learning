@@ -1,8 +1,5 @@
 .DS_Store
-.env
-.vscode
 
 package*
-node_modules
 
 src/wordList.txt
