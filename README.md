@@ -22,18 +22,6 @@ Install dependencies
   npm install
 ```
 
-Start the server
-
-```bash
-  npm run start
-```
-
-Open a localhost tab at
-
-```bash
-  http://localhost:3000
-```
-
 
 ## License
 
