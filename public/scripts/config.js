@@ -31,7 +31,6 @@ var fetchAPI = async function(apiPath, args, method='POST') {
         return JsonAPI;
     } catch (error) {
         console.error(error);
-        alert(error);
     }
 }
 

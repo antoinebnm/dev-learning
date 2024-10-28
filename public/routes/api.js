@@ -3,12 +3,6 @@ const api = express.Router();
 const User = require("../../models/user");
 const Game = require("../../models/game");
 
-api.use('/:url?', (req, res, next) => {
-    const url = req.params.url || 'none';
-    console.log('>>>>>>>>>>> Request Type:', req.method, '| URL:', url);
-    next();
-})
-
 api.post("/users/:action/:id/:attribute?/:value?", async (req, res, next) => {
     switch (req.params.action) {
         case 'add':
@@ -76,7 +70,7 @@ api.post("/users/:action/:id/:attribute?/:value?", async (req, res, next) => {
                         res.status(400).json({ error: "Bad request" });
 
                     } else if (user.credentials.password == req.params.attribute) {
-                        res.status(200).json(user);
+                        res.status(200).json(user._id);
 
                     } else {
                         res.status(401).json({ error: "Unauthorized" });

@@ -28,6 +28,16 @@ const authPopup = document.getElementById("authPopup");
 const closeBtn = document.querySelector(".close-btn");
 const authTitle = document.getElementById("authTitle");
 const authForm = document.getElementById("authForm");
+const accountMenu = document.getElementById('accountMenu');
+const userProfil = document.getElementById('userProfil');
+
+function toggleUserProfil(name) {
+    loginButton.hidden = true;
+    registerButton.hidden = true;
+
+    userProfil.textContent = name;
+
+}
 
 // Fonction pour ouvrir le popup
 function openPopup(type) {
@@ -60,8 +70,12 @@ authForm.addEventListener("submit", (event) => {
     // Ajouter la logique de connexion/inscription ici
     const action = (authTitle.textContent == 'Login') ? 'read' : 'add';
     try {
-        const user = fetchAPI('users', [action, username, password]);
-        console.log(user);
+        fetchAPI('users', [action, username, password])
+        .then((token) => {
+            if (token) {
+                toggleUserProfil(username);
+            }
+        });
     } catch (error) {
         myRedirect('/', 'index', 'redirect');
         console.log(error + "Something went wrong!");

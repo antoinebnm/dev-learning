@@ -33,5 +33,5 @@ function updateTable(players, gameType) {
 // Appelle la fonction pour récupérer les données et mettre à jour le tableau (à chaque chargement de la page scoreboard)
 fetchAPI('users', ['read','all'])
 .then((data) => {
-    updateTable(data, 'chrono');
+    updateTable(data, 'chrono'); // Json to array
 });

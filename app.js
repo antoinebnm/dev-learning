@@ -23,11 +23,20 @@ app.use(express.static(path.join(__dirname, "public")));
 /**
  * Router Setup
  */
-const router = require("./public/scripts/routes");
+app.use((req, res, next) => {
+    console.log('Time:', Date.now())
+    console.log(`>>>>>>>>>>> Request Type: ${req.method} | URL: /${req.originalUrl}`);
+    next()
+})
+
+const router = require("./public/routes/router");
 app.use('/', router);
 
-const api = require("./public/scripts/api");
+const api = require("./public/routes/api");
 app.use('/api', api);
+
+const auth = require("./public/routes/auth");
+app.use('/auth', auth);
 
 /**
  * Mongoose Connection Setup

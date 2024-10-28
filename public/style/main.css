@@ -11,11 +11,14 @@ body {
     line-height: 1.6;
 }
 
+/* Style pour la banniere */
 .banner {
     background-color: #333;
     color: #fff;
     text-align: center;
-    padding: 1rem 0;
+    align-items: center;
+    justify-content: space-between; /* espace entre les éléments */
+    padding: 1rem 20px;
 }
 
 .banner #homeButton {
@@ -25,6 +28,66 @@ body {
     left: 16px;
     filter: invert(100%);
 }
+
+/* Style pour le menu */
+#accountMenu {
+    display: inline-flex;
+    position: absolute;
+    top: 24px;
+    right: 16px;
+    cursor: pointer;
+}
+
+#userProfil {
+    position: relative;
+    margin-right: 2em;
+}
+
+.dropdown-menu {
+    display: none;
+    position: absolute;
+    right: 0;
+    top: 100%;
+    background-color: #fff;
+    box-shadow: 0px 4px 8px rgba(0, 0, 0, 0.2);
+    border-radius: 4px;
+    z-index: 1;
+}
+
+.dropdown-menu a {
+    display: block;
+    padding: 10px 15px;
+    text-decoration: none;
+    color: #333;
+}
+
+.dropdown-menu a:hover {
+    background-color: #f0f0f0;
+    border-radius: 4px;
+}
+
+.dropdown-menu {
+    display: block; /* Ne pas utiliser display: none, car cela empêche les transitions */
+    opacity: 0;
+    transform: translateY(-10px); /* Déplacer légèrement vers le haut pour l'animation */
+    transition: opacity 0.3s ease, transform 0.3s ease; /* Animation sur 0.3s */
+    visibility: hidden; /* Cache l'élément initialement */
+    position: absolute;
+    right: 0;
+    top: 100%;
+    background-color: #fff;
+    box-shadow: 0px 4px 8px rgba(0, 0, 0, 0.2);
+    border-radius: 4px;
+    z-index: 1;
+}
+
+#accountMenu:hover .dropdown-menu,
+#accountMenu.active .dropdown-menu {
+    opacity: 1;
+    transform: translateY(0); /* Menu revient à sa position initiale */
+    visibility: visible; /* Rend le menu visible */
+}
+
 
 .container {
     max-width: 1200px;
