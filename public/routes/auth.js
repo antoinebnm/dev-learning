@@ -19,6 +19,7 @@ auth.post('/register', async (req, res) => {
 });
    
 // User login
+require('dotenv').config();
 auth.post('/login', async (req, res) => {
     try {
         const { username, password } = req.body;
@@ -32,7 +33,7 @@ auth.post('/login', async (req, res) => {
             return res.status(401).json({ error: 'Authentication failed' });
         }
 
-        const token = jwt.sign({ userId: user._id }, 'your-secret-key', {
+        const token = jwt.sign({ userId: user._id }, process.env.JWT_SECRET, {
             expiresIn: '1h',
         });
         res.status(200).json({ token });

@@ -25,7 +25,7 @@ app.use(express.static(path.join(__dirname, "public")));
  */
 app.use((req, res, next) => {
     console.log('Time:', Date.now())
-    console.log(`>>>>>>>>>>> Request Type: ${req.method} | URL: /${req.originalUrl}`);
+    console.log(`>>>>>>>>>>> Request Type: ${req.method} | URL: ${req.originalUrl}`);
     next()
 })
 
@@ -35,7 +35,7 @@ app.use('/', router);
 const api = require("./public/routes/api");
 app.use('/api', api);
 
-const auth = require("./public/routes/auth");
+const auth = require("./public/routes/auth"); // https://dvmhn07.medium.com/jwt-authentication-in-node-js-a-practical-guide-c8ab1b432a49
 app.use('/auth', auth);
 
 /**
