@@ -2,24 +2,11 @@ const express = require("express");
 const api = express.Router();
 const User = require("../../models/user");
 const Game = require("../../models/game");
+const jwt = require("jsonwebtoken");
+require('dotenv').config();
 
 api.post("/users/:action/:id/:attribute?/:value?", async (req, res, next) => {
     switch (req.params.action) {
-        case 'add':
-            try {
-                const existingUser = (await User.findOne({ 'credentials.login':req.params.id }) === null) ? false : true;
-                if (!existingUser) {
-                            //id here is the display name & login                           //attribute = password here -> value unused
-                    new User({ displayName:req.params.id, credentials:{login:req.params.id, password:req.params.attribute}, addedAt:new Date(), gamesPlayed:[] }).save();
-                    res.status(200).json({message:"Your account just have been created !"});
-                } else {
-                    res.status(401).json({error:"This username is already used. Please chose another one."});
-                }
-            } catch (error) {
-                res.status(400).json({ error: "Bad request" });
-            }
-            break;
-
         case 'update': //id here is the DB id / user token
             try {
                 switch (req.params.attribute) {
@@ -82,6 +69,24 @@ api.post("/users/:action/:id/:attribute?/:value?", async (req, res, next) => {
             
         default:
             break;
+    }
+});
+
+api.post('/users/update', async (req, res, next) => {
+    try {
+        const { userLogin, OAuthToken, param, newValue } = req.body;
+
+        if (OAuthToken !== process.env.ADMIN_ACCESS) {
+            jwt.verify(OAuthToken, process.env.JWT_SECRET); // Throw error if invalid token (mismatch or outdated)
+        } else {
+            console.log(`Admin action realised on ${req.method} ${req.url}        
+    With a request body of ${req.body}`)
+        }
+
+        await User.findOneAndUpdate({ 'credentials.login': userLogin }, { [param]: newValue }, { returnOriginal:false });
+        res.status(200).json({ message: "User document updated" });
+    } catch (error) {
+        res.status(400).json({ error: "Bad request" });
     }
 });
 

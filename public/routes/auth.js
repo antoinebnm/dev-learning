@@ -3,6 +3,7 @@ const auth = express.Router();
 const User = require('../../models/user');
 const bcrypt = require('bcrypt');
 const jwt = require('jsonwebtoken');
+require('dotenv').config();
 
 // User registration
 auth.post('/register', async (req, res) => {
@@ -19,28 +20,30 @@ auth.post('/register', async (req, res) => {
 });
    
 // User login
-require('dotenv').config();
 auth.post('/login', async (req, res) => {
     try {
         const { username, password } = req.body;
         const user = await User.findOne({ 'credentials.login':username });
         if (!user) {
-            return res.status(401).json({ error: 'Authentication failed' });
+            return res.status(401).json({ error: 'Authentication failed, invalid username or password.' });
         }
 
         const passwordMatch = await bcrypt.compare(password, user.credentials.password);
         if (!passwordMatch) {
-            return res.status(401).json({ error: 'Authentication failed' });
+            return res.status(401).json({ error: 'Authentication failed, invalid username or password.' });
         }
 
-        const token = jwt.sign({ userId: user._id }, process.env.JWT_SECRET, {
+                                    //userId => Payload res
+        const OAuthToken = jwt.sign({ userId: user._id }, process.env.JWT_SECRET, {
             expiresIn: '1h',
         });
-        res.status(200).json({ token });
+        const OAuthRefreshToken = jwt.sign({ userId: user._id }, process.env.JWT_SECRET_REFRESH, {
+            expiresIn: '24h',
+        });
+        res.status(200).json({ OAuthToken, OAuthRefreshToken });
 
     } catch (error) {
     res.status(500).json({ error: 'Login failed' });
-    }
-    });
+    }});
 
 module.exports = auth;

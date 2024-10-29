@@ -6,12 +6,15 @@ const express = require("express");
 const path = require("path");
 const cookieParser = require("cookie-parser");
 const logger = require("morgan");
+const compression = require('compression');
 
 const app = express();
 
 /**
  * Middleware Setup
  */
+app.use(compression()); // Compress all routes
+
 app.use(logger("dev"));
 app.use(express.json());
 app.use(express.urlencoded({ extended: false }));
