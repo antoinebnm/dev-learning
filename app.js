@@ -6,7 +6,7 @@ const express = require("express");
 const path = require("path");
 const cookieParser = require("cookie-parser");
 const logger = require("morgan");
-const compression = require('compression');
+const compression = require("compression");
 
 const app = express();
 
@@ -20,8 +20,6 @@ app.use(express.json());
 app.use(express.urlencoded({ extended: false }));
 app.use(cookieParser());
 
-
-
 // public access resource setup
 app.use(express.static(path.join(__dirname, "public")));
 
@@ -30,19 +28,21 @@ app.use(express.static(path.join(__dirname, "public")));
  */
 const aliveDate = new Date().getTime();
 app.use((req, res, next) => {
-    console.log(`Time elapsed since alive: ${Date.now() - aliveDate}ms`)
-    console.log(`>>>>>>>>>>> Request Type: ${req.method} | URL: ${req.originalUrl}`);
-    next()
-})
+    console.log(`Time elapsed since alive: ${Date.now() - aliveDate}ms`);
+    console.log(
+        `>>>>>>>>>>> Request Type: ${req.method} | URL: ${req.originalUrl}`
+    );
+    next();
+});
 
 const router = require("./public/router/routes");
-app.use('/', router);
+app.use("/", router);
 
 const api = require("./api/users");
-app.use('/api', api);
+app.use("/api", api);
 
 const auth = require("./api/auth"); // https://dvmhn07.medium.com/jwt-authentication-in-node-js-a-practical-guide-c8ab1b432a49
-app.use('/auth', auth);
+app.use("/auth", auth);
 
 /**
  * Mongoose Connection Setup
@@ -50,15 +50,19 @@ app.use('/auth', auth);
 const mongoose = require("mongoose");
 mongoose.set("strictQuery", false);
 
-require('dotenv').config();
+require("dotenv").config();
 const DBname = "learning";
-const mongoDB = process.env.MONGODB_TOKEN + DBname + "?retryWrites=true&w=majority&appName=Cluster0" ;
+const mongoDB =
+    process.env.MONGODB_TOKEN +
+    DBname +
+    "?retryWrites=true&w=majority&appName=Cluster0";
 
 main().catch((err) => console.log(err));
 async function main() {
-    await mongoose.connect(mongoDB)
-    .then(() => console.log('Connexion à MongoDB réussie !'))
-    .catch(() => console.log('Connexion à MongoDB échouée !'));
+    await mongoose
+        .connect(mongoDB)
+        .then(() => console.log("Connexion à MongoDB réussie !"))
+        .catch(() => console.log("Connexion à MongoDB échouée !"));
 }
 
 /**

@@ -11,12 +11,11 @@ var header = `
     `;
 thead.innerHTML = header;
 
-
 function updateTable(players, gameType) {
     let row = ``;
-    console.log('Player Array: ' + players);
-    players.forEach(element => {
-        element.gamesPlayed.forEach(game => {
+    console.log("Player Array: " + players);
+    players.forEach((element) => {
+        element.gamesPlayed.forEach((game) => {
             if (game.type == gameType) {
                 row += `
                 <tr>
@@ -24,14 +23,14 @@ function updateTable(players, gameType) {
                     <td>${new Date(game.dateOfEntry).toLocaleDateString()}</td>
                     <td>${game.score}</td>
                     <td>${game.time}</td>
-                </tr>`
-            }});
+                </tr>`;
+            }
+        });
     });
     tbody.innerHTML = row;
 }
 
 // Appelle la fonction pour récupérer les données et mettre à jour le tableau (à chaque chargement de la page scoreboard)
-fetchAPI('users/read/all')
-.then((data) => {
-    updateTable(data, 'chrono'); // Json to array
+fetchAPI("users/read/all").then((data) => {
+    updateTable(data, "chrono"); // Json to array
 });

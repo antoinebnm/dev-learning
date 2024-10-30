@@ -5,7 +5,7 @@
 }
 
 body {
-    font-family: 'Arial', sans-serif;
+    font-family: "Arial", sans-serif;
     background-color: #f4f4f4;
     color: #333;
     line-height: 1.6;
@@ -69,7 +69,9 @@ body {
 .dropdown-menu {
     display: block; /* Ne pas utiliser display: none, car cela empêche les transitions */
     opacity: 0;
-    transform: translateY(-10px); /* Déplacer légèrement vers le haut pour l'animation */
+    transform: translateY(
+        -10px
+    ); /* Déplacer légèrement vers le haut pour l'animation */
     transition: opacity 0.3s ease, transform 0.3s ease; /* Animation sur 0.3s */
     visibility: hidden; /* Cache l'élément initialement */
     position: absolute;
@@ -88,7 +90,6 @@ body {
     visibility: visible; /* Rend le menu visible */
 }
 
-
 .container {
     max-width: 1200px;
     margin: 2rem auto;
@@ -96,7 +97,8 @@ body {
     text-align: center;
 }
 
-.game-box, .leaderboard-box {
+.game-box,
+.leaderboard-box {
     background: #fff;
     padding: 2rem;
     border-radius: 10px;

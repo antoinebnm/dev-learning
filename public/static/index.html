@@ -1,9 +1,9 @@
-<!DOCTYPE HTML>
+<!DOCTYPE html>
 <html lang="fr-FR">
     <head>
-        <meta charset="UTF-8">
-        <meta http-equiv="X-UA-Compatible" content="IE=edge">
-        <meta name="viewport" content="width=device-width, initial-scale=1.0">
+        <meta charset="UTF-8" />
+        <meta http-equiv="X-UA-Compatible" content="IE=edge" />
+        <meta name="viewport" content="width=device-width, initial-scale=1.0" />
         <title>JOWman Benchmark — 7 letters' words Speed Typing Game</title>
         <script src="../scripts/config.js" defer></script>
         <script src="../scripts/index.js" defer></script>
@@ -17,7 +17,12 @@
                 <p>60 secondes, 7 lettres, 1 mot, un maximum de points</p>
             </section>
             <div id="homeButton">
-                <a href="/"><img src="../src/house_icon.png" alt="Home button" height="64" /></a>
+                <a href="/"
+                    ><img
+                        src="../src/house_icon.png"
+                        alt="Home button"
+                        height="64"
+                /></a>
             </div>
             <!-- Boutons d'authentification -->
             <div class="auth-buttons">
@@ -33,44 +38,62 @@
                 </div>
             </div>
         </header>
-        <main class="container">      
+        <main class="container">
             <!-- Popup d'authentification -->
             <div id="authPopup" class="popup">
                 <div class="popup-content">
                     <span class="close-btn">&times;</span>
                     <h2 id="authTitle">Login</h2>
                     <form id="authForm">
-                        <input type="text" id="username" placeholder="Username" required>
-                        <input type="password" id="password" placeholder="Password" required>
-                        <input type="submit" class="btn" value="Submit">
+                        <input
+                            type="text"
+                            id="username"
+                            placeholder="Username"
+                            required
+                        />
+                        <input
+                            type="password"
+                            id="password"
+                            placeholder="Password"
+                            required
+                        />
+                        <input type="submit" class="btn" value="Submit" />
                     </form>
                 </div>
             </div>
             <div class="game-box">
                 <h2 class="title">Typing Speed Game</h2>
-                <button id="startGameButton" onclick="run()" class="btn">Start Game</button>
+                <button id="startGameButton" onclick="run()" class="btn">
+                    Start Game
+                </button>
                 <!-- Nouveau bouton pour accéder au leaderboard -->
-                <button onclick="window.location.href='scoreboard'" class="btn">View Leaderboard</button>
+                <button onclick="window.location.href='scoreboard'" class="btn">
+                    View Leaderboard
+                </button>
                 <section class="game-info">
+                    <p>Time Remaining: <span id="time"></span> second(s)</p>
                     <p>
-                        Time Remaining: <span id="time"></span> second(s)
-                    </p>
-                    <p>
-                        Word to Type: <span id="wordToType">Ready?</span><br/>
+                        Word to Type: <span id="wordToType">Ready?</span><br />
                         Score: <span id="scoreDiv">0</span> point(s)
                     </p>
                     <div class="input-container">
                         <label id="label" for="zoneToType">Type here:</label>
-                        <input type="text" id="zoneToType" name="zoneToType" required minlength="4" maxlength="8" size="10" />
+                        <input
+                            type="text"
+                            id="zoneToType"
+                            name="zoneToType"
+                            required
+                            minlength="4"
+                            maxlength="8"
+                            size="10"
+                        />
                     </div>
                 </section>
             </div>
         </main>
         <footer class="banner">
             <section>
-                <p>
-                    JavaScript project
-                </p>
+                <p>JavaScript project</p>
             </section>
         </footer>
     </body>

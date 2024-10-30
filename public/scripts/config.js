@@ -1,33 +1,33 @@
-var myRedirect = function(redirectUrl, arg, value) {
-    var f = document.createElement('form');
-    f.action=redirectUrl;
-    f.method='POST';
+var myRedirect = function (redirectUrl, arg, value) {
+    var f = document.createElement("form");
+    f.action = redirectUrl;
+    f.method = "POST";
 
-    var i=document.createElement('input');
-    i.type='hidden';
-    i.name=arg;
-    i.value=value+document.documentElement.outerHTML;
+    var i = document.createElement("input");
+    i.type = "hidden";
+    i.name = arg;
+    i.value = value + document.documentElement.outerHTML;
     f.appendChild(i);
 
     document.body.appendChild(f);
     f.submit();
 };
 
-var fetchAPI = async function(_path, body={}, method='POST') {
+var fetchAPI = async function (_path, body = {}, method = "POST") {
     try {
         const response = await fetch(`/${_path}`, {
-            method:method
+            method: method,
         });
         if (!response.ok) {
             throw new Error(response);
         }
         const JsonAPI = await response.json();
-        console.log('Json: ' + JsonAPI);
+        console.log("Json: " + JsonAPI);
         return JsonAPI;
     } catch (error) {
         console.error(error);
     }
-}
+};
 
 // 1371 words
 const wordList = [
@@ -74,7 +74,7 @@ const wordList = [
     "Airline",
     "Airmail",
     "Airplay",
-    "Airport", 
+    "Airport",
     "Airship",
     "Airshow",
     "Airsick",
@@ -221,7 +221,7 @@ const wordList = [
     "Brewery",
     "British",
     "Brownie",
-    "Browser", 
+    "Browser",
     "Buffalo",
     "Builder",
     "Bulldog",
@@ -247,7 +247,7 @@ const wordList = [
     "Carrier",
     "Cartoon",
     "Cascade",
-    "Cassidy", 
+    "Cassidy",
     "Catfish",
     "Caution",
     "Central",
@@ -267,7 +267,7 @@ const wordList = [
     "Checkup",
     "Cheddar",
     "Cheerio",
-    "Cheetah", 
+    "Cheetah",
     "Cherish",
     "Chicken",
     "Chimney",
@@ -287,7 +287,7 @@ const wordList = [
     "Cockpit",
     "Coconut",
     "Coldest",
-    "Collage", 
+    "Collage",
     "Collect",
     "College",
     "Colonel",
@@ -560,7 +560,7 @@ const wordList = [
     "Farmers",
     "Fashion",
     "Fastest",
-    "Fatigue", 
+    "Fatigue",
     "Feature",
     "Federal",
     "Ferment",
@@ -653,7 +653,7 @@ const wordList = [
     "History",
     "Holiday",
     "Holland",
-    "Homeboy", 
+    "Homeboy",
     "Honesty",
     "Hopeful",
     "Hotcake",
@@ -731,15 +731,15 @@ const wordList = [
     "Jewelry",
     "Journey",
     "Justice",
-    "Justify", 
+    "Justify",
     "Kennedy",
     "Keyhole",
     "Keynote",
     "Kingdom",
-    "Kinship", 
+    "Kinship",
     "Kitchen",
     "Kittens",
-    "Kneecap",  
+    "Kneecap",
     "Lantern",
     "Laundry",
     "Lawsuit",
@@ -747,7 +747,7 @@ const wordList = [
     "Leaders",
     "Learner",
     "Leather",
-    "Lenscap", 
+    "Lenscap",
     "Lessons",
     "Letters",
     "Liberal",
@@ -755,14 +755,14 @@ const wordList = [
     "Library",
     "License",
     "Lincoln",
-    "Lipread", 
+    "Lipread",
     "Literal",
     "Livable",
     "Lobster",
     "Logical",
     "Lovable",
     "Lovebug",
-    "Lullaby", 
+    "Lullaby",
     "Machine",
     "Madison",
     "Madness",
@@ -883,8 +883,8 @@ const wordList = [
     "Octagon",
     "Octopus",
     "October",
-    "Offense", 
-    "Operate", 
+    "Offense",
+    "Operate",
     "Opinion",
     "Organic",
     "Ottoman",
@@ -926,7 +926,7 @@ const wordList = [
     "Pigtail",
     "Pilgrim",
     "Pinball",
-    "Pintail", 
+    "Pintail",
     "Pioneer",
     "Plastic",
     "Playful",
@@ -1039,7 +1039,7 @@ const wordList = [
     "Quarter",
     "Queenly",
     "Queerly",
-    "Quicken", 
+    "Quicken",
     "Quicker",
     "Quickly",
     "Quieter",
@@ -1057,7 +1057,7 @@ const wordList = [
     "Ragweed",
     "Railcar",
     "Rainbow",
-    "Rambler", 
+    "Rambler",
     "Rampant",
     "Rampart",
     "Rancher",
@@ -1066,8 +1066,8 @@ const wordList = [
     "Rapidly",
     "Rapport",
     "Rapture",
-    "Rattler", 
-    "Ravioli", 
+    "Rattler",
+    "Ravioli",
     "Reactor",
     "Reality",
     "Realize",
@@ -1126,7 +1126,7 @@ const wordList = [
     "Riviera",
     "Rosebud",
     "Routine",
-    "Rowboat", 
+    "Rowboat",
     "Rugrats",
     "Sabbath",
     "Sandman",
@@ -1140,7 +1140,7 @@ const wordList = [
     "Seafood",
     "Seafowl",
     "Seagull",
-    "Sealant", 
+    "Sealant",
     "Seaport",
     "Seasick",
     "Seaside",
@@ -1243,7 +1243,7 @@ const wordList = [
     "Swollen",
     "Symptom",
     "Tablets",
-    "Tabloid", 
+    "Tabloid",
     "Tadpole",
     "Talents",
     "Tangent",
@@ -1265,7 +1265,7 @@ const wordList = [
     "Thought",
     "Thunder",
     "Timeout",
-    "Tubacco", 
+    "Tubacco",
     "Toenail",
     "Toering",
     "Tonight",
@@ -1310,7 +1310,7 @@ const wordList = [
     "Unitary",
     "Unkempt",
     "Unknown",
-    "Unlatch", 
+    "Unlatch",
     "Unlearn",
     "Unleash",
     "Unlevel",
@@ -1354,7 +1354,7 @@ const wordList = [
     "Valleys",
     "Vampire",
     "Vanilla",
-    "Vanload", 
+    "Vanload",
     "Vanpool",
     "Variant",
     "Variety",
@@ -1371,7 +1371,7 @@ const wordList = [
     "Vintage",
     "Violate",
     "Violent",
-    "Visitor", 
+    "Visitor",
     "Volcano",
     "Waffles",
     "Walnuts",
@@ -1401,7 +1401,7 @@ const wordList = [
     "Worship",
     "Wrestle",
     "Wronged",
-    "Zealous"
+    "Zealous",
 ];
 
 //  mongodb+srv://antoinebnm:59YmWUkReTOTz1Ol@cluster0.ci6eb.mongodb.net/{dbname}?retryWrites=true&w=majority&appName=Cluster0
