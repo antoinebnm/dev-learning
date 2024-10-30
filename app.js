@@ -13,12 +13,14 @@ const app = express();
 /**
  * Middleware Setup
  */
-//app.use(compression()); // Compress all routes
+app.use(compression()); // Compress all routes
 
 app.use(logger("dev"));
 app.use(express.json());
 app.use(express.urlencoded({ extended: false }));
 app.use(cookieParser());
+
+
 
 // public access resource setup
 app.use(express.static(path.join(__dirname, "public")));
@@ -28,18 +30,18 @@ app.use(express.static(path.join(__dirname, "public")));
  */
 const aliveDate = new Date().getTime();
 app.use((req, res, next) => {
-    console.log('Time:', Date.now() - aliveDate)
+    console.log(`Time elapsed since alive: ${Date.now() - aliveDate}ms`)
     console.log(`>>>>>>>>>>> Request Type: ${req.method} | URL: ${req.originalUrl}`);
     next()
 })
 
-const router = require("./public/routes/router");
+const router = require("./public/router/routes");
 app.use('/', router);
 
-const api = require("./public/routes/api");
+const api = require("./api/users");
 app.use('/api', api);
 
-const auth = require("./public/routes/auth"); // https://dvmhn07.medium.com/jwt-authentication-in-node-js-a-practical-guide-c8ab1b432a49
+const auth = require("./api/auth"); // https://dvmhn07.medium.com/jwt-authentication-in-node-js-a-practical-guide-c8ab1b432a49
 app.use('/auth', auth);
 
 /**
