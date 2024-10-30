@@ -70,7 +70,7 @@ authForm.addEventListener("submit", (event) => {
     // Ajouter la logique de connexion/inscription ici
     const action = (authTitle.textContent == 'Login') ? 'read' : 'add';
     try {
-        fetchAPI('users', [action, username, password])
+        fetchAPI(`users/${action}/${username}/${password}`)
         .then((token) => {
             if (token) {
                 toggleUserProfil(username);

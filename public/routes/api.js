@@ -2,7 +2,7 @@ const express = require("express");
 const api = express.Router();
 const User = require("../../models/user");
 const Game = require("../../models/game");
-const jwt = require("jsonwebtoken");
+const fetchData = require("../scripts/fetchData");
 require('dotenv').config();
 
 api.post("/users/:action/:id/:attribute?/:value?", async (req, res, next) => {
@@ -29,6 +29,7 @@ api.post("/users/:action/:id/:attribute?/:value?", async (req, res, next) => {
                         break;
                     
                     default:
+                        next();
                         break;
                 }
             } catch {
@@ -76,16 +77,22 @@ api.post('/users/update', async (req, res, next) => {
     try {
         const { userLogin, OAuthToken, param, newValue } = req.body;
 
-        if (OAuthToken !== process.env.ADMIN_ACCESS) {
-            jwt.verify(OAuthToken, process.env.JWT_SECRET); // Throw error if invalid token (mismatch or outdated)
-        } else {
-            console.log(`Admin action realised on ${req.method} ${req.url}        
-    With a request body of ${req.body}`)
+        const verifyToken = await fetchData(req, `/auth/jwtsigncheck`, { 'OAuthToken': OAuthToken });
+        if (!verifyToken) { 
+            throw new Error("Token verification failed");
         }
 
-        await User.findOneAndUpdate({ 'credentials.login': userLogin }, { [param]: newValue }, { returnOriginal:false });
-        res.status(200).json({ message: "User document updated" });
+        if (param == 'gamesPlayed') {
+            throw new Error("Games update unsupported for now.");
+            
+        }
+
+        await User.findOneAndUpdate({ 'credentials.login': userLogin }, { [param]: newValue }, { returnOriginal:false })
+        .then(() => {
+            res.status(200).json({ message: "User document updated" });
+        });
     } catch (error) {
+        console.log(error.message);
         res.status(400).json({ error: "Bad request" });
     }
 });

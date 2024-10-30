@@ -13,14 +13,9 @@ var myRedirect = function(redirectUrl, arg, value) {
     f.submit();
 };
 
-var fetchAPI = async function(apiPath, args, method='POST') {
+var fetchAPI = async function(_path, body={}, method='POST') {
     try {
-        let url = ``;
-        args.forEach(element => {
-            url += `/${element}`;
-        });
-        //console.log(`/api/${apiPath}${url}`);
-        const response = await fetch(`/api/${apiPath}${url}`, {
+        const response = await fetch(`/${_path}`, {
             method:method
         });
         if (!response.ok) {

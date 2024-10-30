@@ -18,7 +18,7 @@ auth.post('/register', async (req, res) => {
         res.status(500).json({ error: 'Registration failed' });
     }
 });
-   
+
 // User login
 auth.post('/login', async (req, res) => {
     try {
@@ -45,5 +45,23 @@ auth.post('/login', async (req, res) => {
     } catch (error) {
     res.status(500).json({ error: 'Login failed' });
     }});
+
+auth.post('/jwtsigncheck', (req, res, next) => {
+    try {
+        const { OAuthToken } = req.body;
+
+        if (OAuthToken !== process.env.ADMIN_ACCESS) {
+            jwt.verify(OAuthToken, process.env.JWT_SECRET); // Throw error if invalid token (mismatch or outdated)
+        } else {
+            console.log(`Admin action realised on ${req.method} ${req.url}        
+            With a request body of ${req.body}`)
+        }
+        res.status(200).json({ message: "Valid token" });
+
+    } catch (error) {
+        console.log(error.message);
+        res.status(400).json({ error: "Bad request" });
+    }
+})
 
 module.exports = auth;

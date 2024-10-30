@@ -13,7 +13,7 @@ const app = express();
 /**
  * Middleware Setup
  */
-app.use(compression()); // Compress all routes
+//app.use(compression()); // Compress all routes
 
 app.use(logger("dev"));
 app.use(express.json());
@@ -26,8 +26,9 @@ app.use(express.static(path.join(__dirname, "public")));
 /**
  * Router Setup
  */
+const aliveDate = new Date().getTime();
 app.use((req, res, next) => {
-    console.log('Time:', Date.now())
+    console.log('Time:', Date.now() - aliveDate)
     console.log(`>>>>>>>>>>> Request Type: ${req.method} | URL: ${req.originalUrl}`);
     next()
 })
