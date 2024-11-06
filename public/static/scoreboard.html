@@ -1,61 +1,75 @@
 <!DOCTYPE html>
 <html lang="fr-FR">
-    <head>
-        <meta charset="UTF-8" />
-        <meta http-equiv="X-UA-Compatible" content="IE=edge" />
-        <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-        <title>Leaderboard — JOWman Benchmark</title>
-        <script src="../scripts/config.js" defer></script>
-        <script src="../scripts/scoreboard.js" defer></script>
-        <link href="../style/main.css" rel="stylesheet" />
-        <link href="../style/board.css" rel="stylesheet" />
-        <link href="../src/js.ico" rel="icon" />
-    </head>
-    <body>
-        <header class="banner">
-            <section>
-                <h1>Games History</h1>
-                <br />
-            </section>
-            <div id="homeButton">
-                <a href="/"
-                    ><img
-                        src="../src/house_icon.png"
-                        alt="Home button"
-                        height="64"
-                /></a>
-            </div>
-            <!-- Boutons d'authentification -->
-            <div class="auth-buttons">
-                <button id="loginButton" class="btn">Login</button>
-                <button id="registerButton" class="btn">Register</button>
-            </div>
-            <div id="accountMenu">
-                <span id="userProfil"></span>
-                <div class="dropdown-menu">
-                    <a href="#">Profil</a>
-                    <a href="#">Paramètres</a>
-                    <a href="/">Déconnexion</a>
-                </div>
-            </div>
-        </header>
-        <main class="container">
-            <div class="leaderboard-box">
-                <table id="leaderboard" class="table-fill">
-                    <h2 class="table-title">Top Scores</h2>
-                    <thead>
-                        <!-- Add custom header -->
-                    </thead>
-                    <tbody class="table-hover">
-                        <!-- Add players dynamically -->
-                    </tbody>
-                </table>
-            </div>
-        </main>
-        <footer class="banner">
-            <section>
-                <p>JavaScript project</p>
-            </section>
-        </footer>
-    </body>
+  <head>
+    <meta charset="UTF-8" />
+    <meta http-equiv="X-UA-Compatible" content="IE=edge" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Leaderboard — JOWman Benchmark</title>
+    <script src="../scripts/config.js" defer></script>
+    <script src="../scripts/scoreboard.js" defer></script>
+    <link href="../style/main.css" rel="stylesheet" />
+    <link href="../style/board.css" rel="stylesheet" />
+    <link href="../src/js.ico" rel="icon" />
+  </head>
+  <body>
+    <header class="banner">
+      <section>
+        <h1>Games History</h1>
+        <br />
+      </section>
+      <div id="homeButton">
+        <a href="/"
+          ><img src="../src/house_icon.png" alt="Home button" height="64"
+        /></a>
+      </div>
+      <!-- Boutons d'authentification -->
+      <div class="auth-buttons">
+        <button id="loginButton" class="btn">Login</button>
+        <button id="registerButton" class="btn">Register</button>
+      </div>
+      <div id="accountMenu">
+        <span id="userProfil"></span>
+        <div class="dropdown-menu">
+          <a href="#">Profil</a>
+          <a href="#">Paramètres</a>
+          <a href="/">Déconnexion</a>
+        </div>
+      </div>
+    </header>
+    <main class="container">
+      <!-- Popup d'authentification -->
+      <div id="authPopup" class="popup">
+        <div class="popup-content">
+          <span class="close-btn">&times;</span>
+          <h2 id="authTitle">Login</h2>
+          <form id="authForm">
+            <input type="text" id="username" placeholder="Username" required />
+            <input
+              type="password"
+              id="password"
+              placeholder="Password"
+              required
+            />
+            <input type="submit" class="btn" value="Submit" />
+          </form>
+        </div>
+      </div>
+      <div class="leaderboard-box">
+        <table id="leaderboard" class="table-fill">
+          <h2 class="table-title">Top Scores</h2>
+          <thead>
+            <!-- Add custom header -->
+          </thead>
+          <tbody class="table-hover">
+            <!-- Add players dynamically -->
+          </tbody>
+        </table>
+      </div>
+    </main>
+    <footer class="banner">
+      <section>
+        <p>JavaScript project</p>
+      </section>
+    </footer>
+  </body>
 </html>

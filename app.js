@@ -4,9 +4,12 @@
 const createError = require("http-errors");
 const express = require("express");
 const path = require("path");
-const cookieParser = require("cookie-parser");
 const logger = require("morgan");
 const compression = require("compression");
+const helmet = require("helmet");
+const session = require("express-session");
+
+require("dotenv").config();
 
 const app = express();
 
@@ -18,7 +21,33 @@ app.use(compression()); // Compress all routes
 app.use(logger("dev"));
 app.use(express.json());
 app.use(express.urlencoded({ extended: false }));
-app.use(cookieParser());
+
+app.set("trust proxy", 1); // trust first proxy
+app.use(
+  session({
+    secret: process.env.COOKIE_SECRET,
+    resave: false,
+    saveUninitialized: false,
+    cookie: {
+      maxAge: 10 * 60 * 1000, // 10 minutes
+      httpOnly: true,
+      secure: false, // mettre à `true` en production si HTTPS est utilisé
+    }, // miliseconds * seconds * minutes * hour
+  })
+);
+
+// Add helmet to the middleware chain.
+// Set CSP headers to allow our Bootstrap and Jquery to be served
+app.use(helmet());
+
+// Set up rate limiter: maximum of twenty requests per minute
+const RateLimit = require("express-rate-limit");
+const limiter = RateLimit({
+  windowMs: 1 * 60 * 1000, // 1 minute
+  max: 20,
+});
+// Apply rate limiter to all requests
+app.use(limiter);
 
 // public access resource setup
 app.use(express.static(path.join(__dirname, "public")));
@@ -28,11 +57,13 @@ app.use(express.static(path.join(__dirname, "public")));
  */
 const aliveDate = new Date().getTime();
 app.use((req, res, next) => {
-    console.log(`Time elapsed since alive: ${Date.now() - aliveDate}ms`);
-    console.log(
-        `>>>>>>>>>>> Request Type: ${req.method} | URL: ${req.originalUrl}`
-    );
-    next();
+  console.log(`Time elapsed since alive: ${Date.now() - aliveDate}ms`);
+  console.log(
+    `>>>>>>>>>>> Request Type: ${req.method} | URL: ${req.originalUrl}`
+  );
+  console.log(req.sessionID);
+  console.log(req.session);
+  next();
 });
 
 const router = require("./public/router/routes");
@@ -42,7 +73,7 @@ const api = require("./api/users");
 app.use("/api", api);
 
 const auth = require("./api/auth"); // https://dvmhn07.medium.com/jwt-authentication-in-node-js-a-practical-guide-c8ab1b432a49
-app.use("/auth", auth);
+app.use("/api/auth", auth);
 
 /**
  * Mongoose Connection Setup
@@ -50,19 +81,18 @@ app.use("/auth", auth);
 const mongoose = require("mongoose");
 mongoose.set("strictQuery", false);
 
-require("dotenv").config();
 const DBname = "learning";
 const mongoDB =
-    process.env.MONGODB_TOKEN +
-    DBname +
-    "?retryWrites=true&w=majority&appName=Cluster0";
+  process.env.MONGODB_TOKEN +
+  DBname +
+  "?retryWrites=true&w=majority&appName=Cluster0";
 
 main().catch((err) => console.log(err));
 async function main() {
-    await mongoose
-        .connect(mongoDB)
-        .then(() => console.log("Connexion à MongoDB réussie !"))
-        .catch(() => console.log("Connexion à MongoDB échouée !"));
+  await mongoose
+    .connect(mongoDB)
+    .then(() => console.log("Connexion à MongoDB réussie !"))
+    .catch(() => console.log("Connexion à MongoDB échouée !"));
 }
 
 /**
@@ -71,17 +101,17 @@ async function main() {
 
 // catch 404 and forward to error handler
 app.use((req, res, next) => {
-    next(createError(404));
+  next(createError(404));
 });
 // error handler
 app.use((err, req, res, next) => {
-    // set locals, only providing error in development
-    res.locals.message = err.message;
-    res.locals.error = req.app.get("env") === "development" ? err : {};
+  // set locals, only providing error in development
+  res.locals.message = err.message;
+  res.locals.error = req.app.get("env") === "development" ? err : {};
 
-    // render the error page
-    res.status(err.status || 500);
-    res.send(`<h1>Error ${err.status} - ${err.message}</h1>`);
+  // render the error page
+  res.status(err.status || 500);
+  res.send(`<h1>Error ${err.status} - ${err.message}</h1>`);
 });
 
 /**
@@ -89,7 +119,7 @@ app.use((err, req, res, next) => {
  */
 const PORT = process.env.PORT || 3000;
 app.listen(PORT, () => {
-    console.log(`Server is running on port ${PORT}`);
+  console.log(`Server is running on port ${PORT}`);
 });
 
 module.exports = app;

@@ -1,199 +1,199 @@
 * {
-    margin: 0;
-    padding: 0;
-    box-sizing: border-box;
+  margin: 0;
+  padding: 0;
+  box-sizing: border-box;
 }
 
 body {
-    font-family: "Arial", sans-serif;
-    background-color: #f4f4f4;
-    color: #333;
-    line-height: 1.6;
+  font-family: "Arial", sans-serif;
+  background-color: #f4f4f4;
+  color: #333;
+  line-height: 1.6;
 }
 
 /* Style pour la banniere */
 .banner {
-    background-color: #333;
-    color: #fff;
-    text-align: center;
-    align-items: center;
-    justify-content: space-between; /* espace entre les éléments */
-    padding: 1rem 20px;
+  background-color: #333;
+  color: #fff;
+  text-align: center;
+  align-items: center;
+  justify-content: space-between; /* espace entre les éléments */
+  padding: 1rem 20px;
 }
 
 .banner #homeButton {
-    position: absolute;
-    padding: 0;
-    top: 16px;
-    left: 16px;
-    filter: invert(100%);
+  position: absolute;
+  padding: 0;
+  top: 16px;
+  left: 16px;
+  filter: invert(100%);
 }
 
 /* Style pour le menu */
 #accountMenu {
-    display: inline-flex;
-    position: absolute;
-    top: 24px;
-    right: 16px;
-    cursor: pointer;
+  display: inline-flex;
+  position: absolute;
+  top: 24px;
+  right: 16px;
+  cursor: pointer;
 }
 
 #userProfil {
-    position: relative;
-    margin-right: 2em;
+  position: relative;
+  margin-right: 2em;
 }
 
 .dropdown-menu {
-    display: none;
-    position: absolute;
-    right: 0;
-    top: 100%;
-    background-color: #fff;
-    box-shadow: 0px 4px 8px rgba(0, 0, 0, 0.2);
-    border-radius: 4px;
-    z-index: 1;
+  display: none;
+  position: absolute;
+  right: 0;
+  top: 100%;
+  background-color: #fff;
+  box-shadow: 0px 4px 8px rgba(0, 0, 0, 0.2);
+  border-radius: 4px;
+  z-index: 1;
 }
 
 .dropdown-menu a {
-    display: block;
-    padding: 10px 15px;
-    text-decoration: none;
-    color: #333;
+  display: block;
+  padding: 10px 15px;
+  text-decoration: none;
+  color: #333;
 }
 
 .dropdown-menu a:hover {
-    background-color: #f0f0f0;
-    border-radius: 4px;
+  background-color: #f0f0f0;
+  border-radius: 4px;
 }
 
 .dropdown-menu {
-    display: block; /* Ne pas utiliser display: none, car cela empêche les transitions */
-    opacity: 0;
-    transform: translateY(
-        -10px
-    ); /* Déplacer légèrement vers le haut pour l'animation */
-    transition: opacity 0.3s ease, transform 0.3s ease; /* Animation sur 0.3s */
-    visibility: hidden; /* Cache l'élément initialement */
-    position: absolute;
-    right: 0;
-    top: 100%;
-    background-color: #fff;
-    box-shadow: 0px 4px 8px rgba(0, 0, 0, 0.2);
-    border-radius: 4px;
-    z-index: 1;
+  display: block; /* Ne pas utiliser display: none, car cela empêche les transitions */
+  opacity: 0;
+  transform: translateY(
+    -10px
+  ); /* Déplacer légèrement vers le haut pour l'animation */
+  transition: opacity 0.3s ease, transform 0.3s ease; /* Animation sur 0.3s */
+  visibility: hidden; /* Cache l'élément initialement */
+  position: absolute;
+  right: 0;
+  top: 100%;
+  background-color: #fff;
+  box-shadow: 0px 4px 8px rgba(0, 0, 0, 0.2);
+  border-radius: 4px;
+  z-index: 1;
 }
 
 #accountMenu:hover .dropdown-menu,
 #accountMenu.active .dropdown-menu {
-    opacity: 1;
-    transform: translateY(0); /* Menu revient à sa position initiale */
-    visibility: visible; /* Rend le menu visible */
+  opacity: 1;
+  transform: translateY(0); /* Menu revient à sa position initiale */
+  visibility: visible; /* Rend le menu visible */
 }
 
 .container {
-    max-width: 1200px;
-    margin: 2rem auto;
-    padding: 1rem;
-    text-align: center;
+  max-width: 1200px;
+  margin: 2rem auto;
+  padding: 1rem;
+  text-align: center;
 }
 
 .game-box,
 .leaderboard-box {
-    background: #fff;
-    padding: 2rem;
-    border-radius: 10px;
-    box-shadow: 0 0 15px rgba(0, 0, 0, 0.1);
+  background: #fff;
+  padding: 2rem;
+  border-radius: 10px;
+  box-shadow: 0 0 15px rgba(0, 0, 0, 0.1);
 }
 
 .title {
-    font-size: 2rem;
-    margin-bottom: 1rem;
+  font-size: 2rem;
+  margin-bottom: 1rem;
 }
 
 /* Style pour les boutons d'authentification */
 .auth-buttons {
-    position: absolute;
-    top: 10px;
-    right: 10px;
+  position: absolute;
+  top: 10px;
+  right: 10px;
 }
 
 .auth-buttons .btn {
-    margin-left: 0.5rem;
-    background-color: #007bff;
-    color: white;
-    border: none;
-    padding: 0.5rem 1rem;
-    font-size: 0.875rem;
-    border-radius: 5px;
-    cursor: pointer;
+  margin-left: 0.5rem;
+  background-color: #007bff;
+  color: white;
+  border: none;
+  padding: 0.5rem 1rem;
+  font-size: 0.875rem;
+  border-radius: 5px;
+  cursor: pointer;
 }
 
 .btn {
-    background-color: #007bff;
-    color: white;
-    border: none;
-    padding: 0.75rem 1.5rem;
-    font-size: 1rem;
-    border-radius: 5px;
-    cursor: pointer;
-    margin: 1rem 0;
+  background-color: #007bff;
+  color: white;
+  border: none;
+  padding: 0.75rem 1.5rem;
+  font-size: 1rem;
+  border-radius: 5px;
+  cursor: pointer;
+  margin: 1rem 0;
 }
 
 .btn:hover {
-    background-color: #0056b3;
+  background-color: #0056b3;
 }
 
 /* Style pour le popup */
 .popup {
-    display: none;
-    position: fixed;
-    top: 0;
-    left: 0;
-    width: 100%;
-    height: 100%;
-    background: rgba(0, 0, 0, 0.5);
-    justify-content: center;
-    align-items: center;
+  display: none;
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  background: rgba(0, 0, 0, 0.5);
+  justify-content: center;
+  align-items: center;
 }
 
 .popup-content {
-    background: #fff;
-    padding: 2rem;
-    border-radius: 10px;
-    text-align: center;
-    width: 300px;
+  background: #fff;
+  padding: 2rem;
+  border-radius: 10px;
+  text-align: center;
+  width: 300px;
 }
 
 .close-btn {
-    position: absolute;
-    top: 10px;
-    right: 10px;
-    font-size: 1.5rem;
-    cursor: pointer;
+  position: absolute;
+  top: 10px;
+  right: 10px;
+  font-size: 1.5rem;
+  cursor: pointer;
 }
 
 .game-info p {
-    margin: 1rem 0;
-    font-size: 1.25rem;
+  margin: 1rem 0;
+  font-size: 1.25rem;
 }
 
 .input-container {
-    margin-top: 1rem;
+  margin-top: 1rem;
 }
 
 input[type="text"] {
-    padding: 0.5rem;
-    font-size: 1rem;
-    border: 1px solid #ccc;
-    border-radius: 5px;
+  padding: 0.5rem;
+  font-size: 1rem;
+  border: 1px solid #ccc;
+  border-radius: 5px;
 }
 
 footer {
-    background-color: #333;
-    color: #fff;
-    text-align: center;
-    padding: 1rem 0;
-    position: fixed;
-    bottom: 0;
-    width: 100%;
+  background-color: #333;
+  color: #fff;
+  text-align: center;
+  padding: 1rem 0;
+  position: fixed;
+  bottom: 0;
+  width: 100%;
 }
