@@ -3,6 +3,7 @@ const auth = express.Router();
 const User = require("../models/User");
 const bcrypt = require("bcrypt");
 const jwt = require("jsonwebtoken");
+const jwtSignCheck = require("../middlewares/jwtsigncheck");
 const requireAuth = require("../middlewares/requireAuth");
 require("dotenv").config();
 
@@ -28,22 +29,41 @@ auth.post("/register", async (req, res) => {
 // User login
 auth.post("/login", async (req, res) => {
   try {
-    const { username, password } = req.body;
-    const user = await User.findOne({ "credentials.login": username });
-    if (!user) {
-      return res.status(401).json({
-        error: "Authentication failed, invalid username or password.",
-      });
-    }
+    const { username, password, token } = req.body; // Retreive info on login
+    if (token) {
+      // if cookie session log, then token exist => verify token and connect
+      try {
+        console.log(req.body);
+        const verifyToken = jwtSignCheck(token, res);
+        if (!verifyToken) {
+          throw new Error("Token verification failed");
+        }
 
-    const passwordMatch = await bcrypt.compare(
-      password,
-      user.credentials.password
-    );
-    if (!passwordMatch) {
-      return res.status(401).json({
-        error: "Authentication failed, invalid username or password.",
-      });
+        const payload = jwt.decode(token);
+        console.log(payload);
+        // connect user using _id from payload
+        var user = await User.findById(payload["userId"]);
+      } catch (error) {
+        console.log(error);
+      }
+    } else {
+      // else connect using login/password verification
+      var user = await User.findOne({ "credentials.login": username });
+      if (!user) {
+        return res.status(401).json({
+          error: "Authentication failed, invalid username or password.",
+        });
+      }
+
+      const passwordMatch = await bcrypt.compare(
+        password,
+        user.credentials.password
+      );
+      if (!passwordMatch) {
+        return res.status(401).json({
+          error: "Authentication failed, invalid username or password.",
+        });
+      }
     }
 
     //userId => Payload res

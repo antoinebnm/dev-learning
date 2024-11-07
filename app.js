@@ -6,7 +6,6 @@ const express = require("express");
 const path = require("path");
 const logger = require("morgan");
 const compression = require("compression");
-const helmet = require("helmet");
 const session = require("express-session");
 
 require("dotenv").config();
@@ -26,11 +25,12 @@ app.set("trust proxy", 1); // trust first proxy
 app.use(
   session({
     secret: process.env.COOKIE_SECRET,
+    name: "sid",
     resave: false,
     saveUninitialized: false,
     cookie: {
       maxAge: 10 * 60 * 1000, // 10 minutes
-      httpOnly: true,
+      httpOnly: false,
       secure: false, // mettre à `true` en production si HTTPS est utilisé
     }, // miliseconds * seconds * minutes * hour
   })
@@ -38,13 +38,14 @@ app.use(
 
 // Add helmet to the middleware chain.
 // Set CSP headers to allow our Bootstrap and Jquery to be served
-app.use(helmet());
+//const helmet = require("helmet");
+//app.use(helmet());
 
-// Set up rate limiter: maximum of twenty requests per minute
+// Set up rate limiter: max requests per windowMs
 const RateLimit = require("express-rate-limit");
 const limiter = RateLimit({
-  windowMs: 1 * 60 * 1000, // 1 minute
-  max: 20,
+  windowMs: 1000, // 1 second
+  max: 128,
 });
 // Apply rate limiter to all requests
 app.use(limiter);
@@ -61,7 +62,7 @@ app.use((req, res, next) => {
   console.log(
     `>>>>>>>>>>> Request Type: ${req.method} | URL: ${req.originalUrl}`
   );
-  console.log(req.sessionID);
+  console.log("SessionID:", req.sessionID);
   console.log(req.session);
   next();
 });

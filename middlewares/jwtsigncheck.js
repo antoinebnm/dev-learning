@@ -1,21 +1,20 @@
 const jwt = require("jsonwebtoken");
 require("dotenv").config();
 
-var jwtSignCheck = (req, res) => {
+var jwtSignCheck = (OAuthToken, res) => {
   try {
-    const { OAuthToken } = req.body;
+    console.log(OAuthToken);
 
     if (OAuthToken !== process.env.ADMIN_ACCESS) {
       jwt.verify(OAuthToken, process.env.JWT_SECRET); // Throw error if invalid token (mismatch or outdated)
     } else {
       console.log(`Admin action realised on ${req.method} ${req.url}        
-            With a request body of ${req.body}`);
+With a request body of ${req.body}`);
     }
-
-    res.status(200).json({ message: "Valid token" });
+    return true;
   } catch (error) {
     console.log(error.message);
-    res.status(400).json({ error: "Bad request" });
+    return false;
   }
 };
 

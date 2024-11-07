@@ -3,6 +3,7 @@ const api = express.Router();
 const User = require("../models/User");
 const Game = require("../models/Game");
 const fetchData = require("../middlewares/fetchData");
+const jwtSignCheck = require("../middlewares/jwtsigncheck");
 require("dotenv").config();
 
 api.post("/users/:action/:id/:attribute?/:value?", async (req, res, next) => {
@@ -90,9 +91,7 @@ api.post("/users/update", async (req, res, next) => {
   try {
     const { userLogin, OAuthToken, param, newValue } = req.body;
 
-    const verifyToken = await fetchData(req, `/auth/jwtsigncheck`, {
-      OAuthToken: OAuthToken,
-    });
+    const verifyToken = jwtSignCheck({ OAuthToken: OAuthToken }, res);
     if (!verifyToken) {
       throw new Error("Token verification failed");
     }

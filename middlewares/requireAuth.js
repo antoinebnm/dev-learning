@@ -1,4 +1,6 @@
+// chheck if auth, not if true user
 const requireAuth = (req, res, next) => {
+  console.log(req.session);
   if (req.session.userId) {
     next(); // User is authenticated, continue to next middleware
   } else {
