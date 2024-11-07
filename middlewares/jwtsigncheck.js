@@ -3,8 +3,6 @@ require("dotenv").config();
 
 var jwtSignCheck = (OAuthToken, res) => {
   try {
-    console.log(OAuthToken);
-
     if (OAuthToken !== process.env.ADMIN_ACCESS) {
       jwt.verify(OAuthToken, process.env.JWT_SECRET); // Throw error if invalid token (mismatch or outdated)
     } else {

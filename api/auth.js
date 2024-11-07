@@ -79,7 +79,8 @@ auth.post("/login", async (req, res) => {
     );
 
     req.session.userId = OAuthToken; // user._id; // Set session identifier
-    res.status(200).json({ OAuthToken, OAuthRefreshToken });
+    req.session.username = user.displayName;
+    res.status(200).json({ OAuthToken, displayName: user.displayName });
   } catch (error) {
     res.status(500).json({ error: "Login failed" });
   }
@@ -87,8 +88,13 @@ auth.post("/login", async (req, res) => {
 
 // User logout
 auth.post("/logout", requireAuth, async (req, res) => {
-  req.session.userId = null;
+  req.session = null;
   res.status(200).redirect("/");
+});
+
+auth.post("/preload", requireAuth, async (req, res) => {
+  const name = req.session.username || "test";
+  res.status(200).json(name);
 });
 
 module.exports = auth;

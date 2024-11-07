@@ -8,9 +8,13 @@ const authForm = document.getElementById("authForm");
 const accountMenu = document.getElementById("accountMenu");
 const userProfil = document.getElementById("userProfil");
 
-const originCookie = getCookie("sid");
-if (originCookie) {
-  fetchData();
+const sid = getCookie("sid") || null;
+if (sid) {
+  fetchData("/api/auth/preload", {}, "POST", { Cookie: sid })
+    .then((name) => {
+      toggleUserProfil(name);
+    })
+    .catch((err) => {});
 }
 
 function toggleUserProfil(name) {
@@ -55,9 +59,10 @@ authForm.addEventListener("submit", (event) => {
       username: username,
       password: password,
     };
-    fetchData(`api/auth/${action}`, body).then((token) => {
-      if (token) {
-        toggleUserProfil(username);
+    fetchData(`api/auth/${action}`, body).then((data) => {
+      console.log(data);
+      if (data["OAuthToken"]) {
+        toggleUserProfil(data["displayName"]);
       }
     });
   } catch (error) {

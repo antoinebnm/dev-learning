@@ -13,7 +13,6 @@ thead.innerHTML = header;
 
 function updateTable(players, gameType) {
   let row = ``;
-  console.log("Player Array: " + players);
   players.forEach((element) => {
     element.gamesPlayed.forEach((game) => {
       if (game.type == gameType) {
