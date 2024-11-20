@@ -15,11 +15,14 @@ describe("Authentication", () => {
   });
 
   afterAll(async () => {
-    await User.deleteMany({});
-
     await server.close();
     await mongoTeardown();
   });
+
+  afterEach(async () => {
+    // Clean DB after each use
+    await User.deleteMany({});
+  })
 
   describe("POST /register", () => {
     it("should register a new user", async () => {
@@ -33,7 +36,7 @@ describe("Authentication", () => {
       expect(userInDb).toBeDefined();
     });
   });
-/*
+
   describe("POST /login", () => {
     beforeEach(async () => {
       // Create a test user
@@ -58,5 +61,5 @@ describe("Authentication", () => {
       expect(response.body.userInfo).toBeDefined();
       expect(response.body.userInfo.displayName).toBe("TestUser");
     });
-  });*/
+  });
 });
