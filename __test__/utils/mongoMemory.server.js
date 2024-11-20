@@ -11,7 +11,7 @@ var mongoSetup = async () => {
   const mongoUri = mongoServer.getUri();
   await mongoose.connect(mongoUri);
 
-  console.log("MongoMemoryServer started")
+  console.log("MongoMemoryServer started");
 };
 
 var mongoTeardown = async () => {
