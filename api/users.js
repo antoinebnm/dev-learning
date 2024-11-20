@@ -2,7 +2,6 @@ const express = require("express");
 const api = express.Router();
 const User = require("../models/User");
 const Game = require("../models/Game");
-const fetchData = require("../middlewares/fetchData");
 const jwtSignCheck = require("../middlewares/jwtsigncheck");
 require("dotenv").config();
 

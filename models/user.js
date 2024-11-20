@@ -8,7 +8,7 @@ const userSchema = new Schema(
       type: String,
       required: true,
       minLength: 1,
-      maxLength: 16,
+      maxLength: 20,
     },
     credentials: {
       login: { type: String, unique: true, required: true },

@@ -18,69 +18,69 @@ auth.post("/register", async (req, res) => {
       addedAt: new Date(),
       gamesPlayed: [],
     });
+
     await user.save();
     req.session.userId = user._id; // Set session identifier
     res.status(201).json({ message: "User registered successfully" });
   } catch (error) {
+    console.error("Error in /register:", error.message);
     res.status(500).json({ error: "Registration failed" });
   }
 });
 
 // User login
-auth.post("/login", async (req, res) => {
+auth.post("/login", async (req, res, next) => {
   try {
-    const { username, password, token } = req.body; // Retreive info on login
-    if (token) {
-      // if cookie session log, then token exist => verify token and connect
-      try {
-        console.log(req.body);
-        const verifyToken = jwtSignCheck(token, res);
-        if (!verifyToken) {
-          throw new Error("Token verification failed");
-        }
+    // if user exist, check if token expired
+    if (req.session.user) {
+      const verifyToken = jwtSignCheck(req.session.user.OAuthToken, res);
+      if (verifyToken) {
+        // token not expired
+        throw new Error("User already logged in!");
+      }
+      // else, continue with basic login
+    }
 
-        const payload = jwt.decode(token);
-        console.log(payload);
-        // connect user using _id from payload
-        var user = await User.findById(payload["userId"]);
-      } catch (error) {
-        console.log(error);
-      }
-    } else {
-      // else connect using login/password verification
-      var user = await User.findOne({ "credentials.login": username });
-      if (!user) {
-        return res.status(401).json({
-          error: "Authentication failed, invalid username or password.",
-        });
-      }
+    const { username, password } = req.body; // Retreive info on login
 
-      const passwordMatch = await bcrypt.compare(
-        password,
-        user.credentials.password
-      );
-      if (!passwordMatch) {
-        return res.status(401).json({
-          error: "Authentication failed, invalid username or password.",
-        });
-      }
+    // connect using login/password verification
+    const user = await User.findOne({ "credentials.login": username });
+    if (!user) {
+      return res.status(401).json({
+        error: "Authentication failed, invalid username.",
+      });
+    }
+    const passwordMatch = await bcrypt.compare(
+      password,
+      user.credentials.password
+    );
+    if (!passwordMatch) {
+      return res.status(401).json({
+        error: "Authentication failed, invalid password.",
+      });
     }
 
     //userId => Payload res
     const OAuthToken = jwt.sign({ userId: user._id }, process.env.JWT_SECRET, {
       expiresIn: "1h",
     });
-    const OAuthRefreshToken = jwt.sign(
-      { userId: user._id },
-      process.env.JWT_SECRET_REFRESH,
-      {
-        expiresIn: "24h",
-      }
-    );
 
-    req.session.userId = OAuthToken; // user._id; // Set session identifier
-    req.session.username = user.displayName;
-    res.status(200).json({ OAuthToken, displayName: user.displayName });
+    req.session.regenerate(function (err) {
+      if (err) next(err);
+
+      // store user information in session, typically a user id
+      req.session.user = {
+        OAuthToken: OAuthToken,
+        displayName: user.displayName,
+      };
+
+      // save the session before redirection to ensure page
+      // load does not happen before session is saved
+      req.session.save(function (err) {
+        if (err) return next(err);
+        res.status(200).json({ userInfo: req.session.user });
+      });
+    });
   } catch (error) {
     res.status(500).json({ error: "Login failed" });
   }
@@ -88,8 +88,26 @@ auth.post("/login", async (req, res) => {
 
 // User logout
 auth.post("/logout", requireAuth, async (req, res) => {
-  req.session = null;
-  res.status(200).redirect("/");
+  req.session.user = null;
+  res.clearCookie("Cookie");
+  req.session.save(function (err) {
+    if (err) next(err);
+
+    // regenerate the session, which is good practice to help
+    // guard against forms of session fixation
+    req.session.regenerate(function (err) {
+      if (err) next(err);
+      res.status(200).redirect("/");
+    });
+  });
+});
+
+auth.post("/log", async (req, res) => {
+  console.log(">>>> Session ID", req.session.id);
+  console.log(">>>> Session Info", req.session);
+  console.log(">>>> Session Cookie", req.get("Cookie"));
+
+  res.status(200).json();
 });
 
 auth.post("/preload", requireAuth, async (req, res) => {

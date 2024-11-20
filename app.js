@@ -24,7 +24,7 @@ app.use(express.urlencoded({ extended: false }));
 app.set("trust proxy", 1); // trust first proxy
 app.use(
   session({
-    secret: process.env.COOKIE_SECRET,
+    secret: process.env.SESSION_SECRET,
     name: "sid",
     resave: false,
     saveUninitialized: false,
@@ -62,8 +62,6 @@ app.use((req, res, next) => {
   console.log(
     `>>>>>>>>>>> Request Type: ${req.method} | URL: ${req.originalUrl}`
   );
-  console.log("SessionID:", req.sessionID);
-  console.log(req.session);
   next();
 });
 
@@ -73,7 +71,7 @@ app.use("/", router);
 const api = require("./api/users");
 app.use("/api", api);
 
-const auth = require("./api/auth"); // https://dvmhn07.medium.com/jwt-authentication-in-node-js-a-practical-guide-c8ab1b432a49
+const auth = require("./api/auth");
 app.use("/api/auth", auth);
 
 /**

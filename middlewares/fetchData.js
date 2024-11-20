@@ -3,10 +3,11 @@ var fetchData = async (
   url = "/",
   body = {},
   method = "POST",
-  headers = { "Content-Type": "application/json" }
+  headers = {}
 ) => {
   try {
     const fullUrl = req.protocol + "://" + req.get("host") + url;
+    headers["Content-Type"] = "application/json";
     const response = await fetch(`${fullUrl}`, {
       method: method,
       headers: headers,
