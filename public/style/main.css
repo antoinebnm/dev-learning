@@ -71,7 +71,9 @@ body {
   transform: translateY(
     -10px
   ); /* Déplacer légèrement vers le haut pour l'animation */
-  transition: opacity 0.3s ease, transform 0.3s ease; /* Animation sur 0.3s */
+  transition:
+    opacity 0.3s ease,
+    transform 0.3s ease; /* Animation sur 0.3s */
   visibility: hidden; /* Cache l'élément initialement */
   position: absolute;
   right: 0;
@@ -107,6 +109,19 @@ body {
 .title {
   font-size: 2rem;
   margin-bottom: 1rem;
+}
+
+#switchAuth {
+  position: relative;
+  display: block;
+  font-size: 10px;
+  color: rgb(60, 60, 60);
+  text-decoration: none;
+  cursor: pointer;
+}
+
+#switchAuth:hover {
+  text-decoration: underline;
 }
 
 /* Style pour les boutons d'authentification */
@@ -164,6 +179,7 @@ body {
 }
 
 .close-btn {
+  color: #f0f0f0;
   position: absolute;
   top: 10px;
   right: 10px;

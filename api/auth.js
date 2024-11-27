@@ -5,6 +5,7 @@ const bcrypt = require("bcrypt");
 const jwt = require("jsonwebtoken");
 const jwtSignCheck = require("../middlewares/jwtsigncheck");
 const requireAuth = require("../middlewares/requireAuth");
+const getCookie = require("../middlewares/getCookie");
 require("dotenv").config();
 
 // User registration
@@ -82,7 +83,7 @@ auth.post("/login", async (req, res, next) => {
       });
     });
   } catch (error) {
-    res.status(500).json({ error: "Login failed" });
+    res.status(500).json({ error: error.message });
   }
 });
 
@@ -105,9 +106,12 @@ auth.post("/logout", requireAuth, async (req, res) => {
 auth.post("/log", async (req, res) => {
   console.log(">>>> Session ID", req.session.id);
   console.log(">>>> Session Info", req.session);
-  console.log(">>>> Session Cookie", req.get("Cookie"));
+  console.log(
+    ">>>> Request Cookie(s)",
+    getCookie(req, res) ? "exist" : "inexistent"
+  );
 
-  res.status(200).json();
+  res.status(200).json(getCookie(req, res));
 });
 
 auth.post("/preload", requireAuth, async (req, res) => {

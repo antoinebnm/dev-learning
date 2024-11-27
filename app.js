@@ -29,7 +29,7 @@ app.use(
     resave: false,
     saveUninitialized: false,
     cookie: {
-      maxAge: 10 * 60 * 1000, // 10 minutes
+      maxAge: 72 * 60 * 60 * 1000, // 72 hours aka 3 days
       httpOnly: false,
       secure: false, // mettre à `true` en production si HTTPS est utilisé
     }, // miliseconds * seconds * minutes * hour
@@ -74,25 +74,9 @@ app.use("/api", api);
 const auth = require("./api/auth");
 app.use("/api/auth", auth);
 
-/**
- * Mongoose Connection Setup
- */
-const mongoose = require("mongoose");
-mongoose.set("strictQuery", false);
-
-const DBname = "learning";
-const mongoDB =
-  process.env.MONGODB_TOKEN +
-  DBname +
-  "?retryWrites=true&w=majority&appName=Cluster0";
-
-main().catch((err) => console.log(err));
-async function main() {
-  await mongoose
-    .connect(mongoDB)
-    .then(() => console.log("Connexion à MongoDB réussie !"))
-    .catch(() => console.log("Connexion à MongoDB échouée !"));
-}
+// DB connection
+const connectDB = require("./middlewares/connectDB");
+connectDB();
 
 /**
  * Error Handler

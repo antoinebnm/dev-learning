@@ -23,7 +23,6 @@ const createServer = async () => {
 
   app.use("/api/auth", require("../../api/auth"));
   app.use("/api/users", require("../../api/users"));
-  console.log(app);
 
   const PORT = process.env.TEST_PORT || 0;
   const server = app.listen(PORT);

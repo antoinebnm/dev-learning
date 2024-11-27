@@ -7,6 +7,12 @@ const authTitle = document.getElementById("authTitle");
 const authForm = document.getElementById("authForm");
 const accountMenu = document.getElementById("accountMenu");
 const userProfil = document.getElementById("userProfil");
+const switchAuth = document.getElementById("switchAuth");
+
+const usernameField = document.getElementById("username");
+const displaynameField = document.getElementById("displayname");
+const passwordField = document.getElementById("password");
+const confirmpwdField = document.getElementById("confirmpwd");
 
 const sid = getCookie("sid") || null;
 if (sid) {
@@ -26,6 +32,23 @@ function toggleUserProfil(name) {
 
 // Fonction pour ouvrir le popup
 function openPopup(type) {
+  if (type == "register") {
+    displaynameField.hidden = false;
+    displaynameField.required = true;
+    confirmpwdField.hidden = false;
+    confirmpwdField.required = true;
+    switchAuth.innerHTML = `Already have an account ?</br>
+  > Log in here instead <`;
+    switchAuth.addEventListener("click", () => openPopup("login"));
+  } else {
+    displaynameField.hidden = true;
+    displaynameField.required = false;
+    confirmpwdField.hidden = true;
+    confirmpwdField.required = false;
+    switchAuth.innerHTML = `First time here ?</br>
+  > Register for free <`;
+    switchAuth.addEventListener("click", () => openPopup("register"));
+  }
   authPopup.style.display = "flex";
   authTitle.textContent = type === "login" ? "Login" : "Register";
 }
@@ -50,15 +73,25 @@ window.addEventListener("click", (event) => {
 // Soumission du formulaire d'authentification
 authForm.addEventListener("submit", (event) => {
   event.preventDefault();
-  const username = document.getElementById("username").value;
-  const password = document.getElementById("password").value;
   // Ajouter la logique de connexion/inscription ici
   const action = authTitle.textContent == "Login" ? "login" : "register";
   try {
-    let body = {
-      username: username,
-      password: password,
-    };
+    let body;
+    if (action == "register") {
+      body = {
+        username: usernameField.value,
+        displayName: displaynameField.value,
+        password: passwordField.value,
+        confirmpwd: confirmpwdField.value,
+      };
+    } else {
+      body = {
+        username: usernameField.value,
+        password: passwordField.value,
+      };
+    }
+    console.log(body);
+
     fetchData(`api/auth/${action}`, body).then((data) => {
       console.log(data);
       if (data["OAuthToken"]) {
@@ -71,7 +104,15 @@ authForm.addEventListener("submit", (event) => {
   }
 
   // clear fields
-  document.getElementById("username").value = "";
-  document.getElementById("password").value = "";
+  usernameField.value = "";
+  displaynameField.value = "";
+  displaynameField.required = false;
+  displaynameField.hidden = true;
+
+  passwordField.value = "";
+  confirmpwdField.value = "";
+  confirmpwdField.required = false;
+  confirmpwdField.hidden = true;
+
   closePopup();
 });

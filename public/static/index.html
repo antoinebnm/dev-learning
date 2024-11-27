@@ -1,4 +1,4 @@
-<!DOCTYPE html>
+<!doctype html>
 <html lang="fr-FR">
   <head>
     <meta charset="UTF-8" />
@@ -43,14 +43,22 @@
           <span class="close-btn">&times;</span>
           <h2 id="authTitle">Login</h2>
           <form id="authForm">
-            <input type="text" id="username" placeholder="Username" required />
+            <input type="text" id="username" placeholder="Login" required />
+            <input type="text" id="displayname" placeholder="Username" hidden />
             <input
               type="password"
               id="password"
               placeholder="Password"
               required
             />
+            <input
+              type="confirmpwd"
+              id="confirmpwd"
+              placeholder="Confirm Password"
+              hidden
+            />
             <input type="submit" class="btn" value="Submit" />
+            <span id="switchAuth"></span>
           </form>
         </div>
       </div>
