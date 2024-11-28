@@ -66,6 +66,41 @@ describe("Authentication", () => {
       expect(response.body.userInfo).toBeDefined();
       expect(response.body.userInfo.displayName).toBe("TestUser");
     });
+    /*
+    it("should throw an error when user already logged in", async () => {
+      const response = await request(app)
+        .post("/api/auth/login")
+        .set({ Cookie: 'sid=something' })
+        .send({  })
+        .expect(500);
+
+      expect(response.body).toBeDefined();
+      expect(response.body).toBe("User already logged in!");
+    });*/
+
+    describe("logging when passing incorrect values", () => {
+      it("should fail when using wrong username", async () => {
+        const response = await request(app)
+          .post("/api/auth/login")
+          .send({ username: "failUser", password: "test123" })
+          .expect(401);
+
+        expect(response.body).toEqual({
+          error: "Authentication failed, invalid username.",
+        });
+      });
+
+      it("should fail when using wrong password", async () => {
+        const response = await request(app)
+          .post("/api/auth/login")
+          .send({ username: "testUser", password: "wrongPassword" })
+          .expect(401);
+
+        expect(response.body).toEqual({
+          error: "Authentication failed, invalid password.",
+        });
+      });
+    });
   });
 
   describe("POST /preload", () => {

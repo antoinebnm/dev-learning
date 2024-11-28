@@ -116,10 +116,10 @@ auth.post("/log", async (req, res) => {
 
 auth.post("/preload", requireAuth, async (req, res) => {
   try {
-    const name = req.session.user.displayName;
-    res.status(200).json(name);
+    const user = req.session.user;
+    res.status(200).json(user.displayName);
   } catch (error) {
-    res.status(404).json({ error: "No session username defined." });
+    res.status(404).json({ error: "No session user defined." });
   }
 });
 
