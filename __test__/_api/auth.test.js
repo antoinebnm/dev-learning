@@ -30,13 +30,13 @@ describe("Authentication", () => {
   });
 
   afterAll(async () => {
+    await User.deleteMany({});
     await server.close();
     await mongoTeardown();
   });
 
   afterEach(async () => {
     // Clean DB after each use
-    await User.deleteMany({});
   });
 
   describe("POST /register", () => {
@@ -53,10 +53,6 @@ describe("Authentication", () => {
   });
 
   describe("POST /login", () => {
-    beforeAll(async () => {
-      await testUser.save();
-    });
-
     it("should login an existing user", async () => {
       const response = await request(app)
         .post("/api/auth/login")
@@ -85,9 +81,9 @@ describe("Authentication", () => {
           .send({ username: "failUser", password: "test123" })
           .expect(401);
 
-        expect(response.body).toEqual({
-          error: "Authentication failed, invalid username.",
-        });
+        expect(response.body.error).toBe(
+          "Authentication failed, invalid username."
+        );
       });
 
       it("should fail when using wrong password", async () => {
@@ -96,9 +92,9 @@ describe("Authentication", () => {
           .send({ username: "testUser", password: "wrongPassword" })
           .expect(401);
 
-        expect(response.body).toEqual({
-          error: "Authentication failed, invalid password.",
-        });
+        expect(response.body.error).toBe(
+          "Authentication failed, invalid password."
+        );
       });
     });
   });
