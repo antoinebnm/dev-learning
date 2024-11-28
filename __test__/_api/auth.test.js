@@ -16,17 +16,6 @@ describe("Authentication", () => {
     const serverSetup = await createServer(); // Start the server and MongoMemoryServer
     app = serverSetup.app;
     server = serverSetup.server;
-
-    // Create a test user
-    testUser = new User({
-      displayName: "TestUser",
-      credentials: {
-        login: "testUser",
-        password: await bcrypt.hash("test123", 10),
-      },
-      addedAt: new Date(),
-      gamesPlayed: [],
-    });
   });
 
   afterAll(async () => {
@@ -34,12 +23,12 @@ describe("Authentication", () => {
     await mongoTeardown();
   });
 
-  afterEach(async () => {
-    // Clean DB after each use
-    await User.deleteMany({});
-  });
-
   describe("POST /register", () => {
+    afterEach(async () => {
+      // Clean DB after each use
+      await User.deleteMany({});
+    });
+
     it("should register a new user", async () => {
       const response = await request(app)
         .post("/api/auth/register")
@@ -53,8 +42,23 @@ describe("Authentication", () => {
   });
 
   describe("POST /login", () => {
-    beforeAll(async () => {
-      await testUser.save();
+    beforeEach(async () => {
+      // Create a test user
+      testUser = new User({
+        displayName: "TestUser",
+        credentials: {
+          login: "testUser",
+          password: await bcrypt.hash("test123", 10),
+        },
+        addedAt: new Date(),
+        gamesPlayed: [],
+      });
+      testUser.save();
+    })
+
+    afterEach(async () => {
+      // Clean DB after each use
+      await User.deleteMany({});
     });
 
     it("should login an existing user", async () => {
@@ -78,32 +82,49 @@ describe("Authentication", () => {
       expect(response.body).toBe("User already logged in!");
     });*/
 
-    describe("logging when passing incorrect values", () => {
-      it("should fail when using wrong username", async () => {
-        const response = await request(app)
-          .post("/api/auth/login")
-          .send({ username: "failUser", password: "test123" })
-          .expect(401);
+    it("should fail when using wrong username", async () => {
+      const response = await request(app)
+        .post("/api/auth/login")
+        .send({ username: "failUser", password: "test123" })
+        .expect(401);
 
-        expect(response.body).toEqual({
-          error: "Authentication failed, invalid username.",
-        });
+      expect(response.body).toEqual({
+        error: "Authentication failed, invalid username.",
       });
+    });
 
-      it("should fail when using wrong password", async () => {
-        const response = await request(app)
-          .post("/api/auth/login")
-          .send({ username: "testUser", password: "wrongPassword" })
-          .expect(401);
+    it("should fail when using wrong password", async () => {
+      const response = await request(app)
+        .post("/api/auth/login")
+        .send({ username: "testUser", password: "wrongPassword" })
+        .expect(401);
 
-        expect(response.body).toEqual({
-          error: "Authentication failed, invalid password.",
-        });
+      expect(response.body).toEqual({
+        error: "Authentication failed, invalid password.",
       });
     });
   });
 
   describe("POST /preload", () => {
+    beforeEach(async () => {
+      // Create a test user
+      testUser = new User({
+        displayName: "TestUser",
+        credentials: {
+          login: "testUser",
+          password: await bcrypt.hash("test123", 10),
+        },
+        addedAt: new Date(),
+        gamesPlayed: [],
+      });
+      testUser.save();
+    })
+
+    afterEach(async () => {
+      // Clean DB after each use
+      await User.deleteMany({});
+    });
+
     it("should not pass requireAuth middleware without session cookies", async () => {
       await request(app).post("/api/auth/preload").expect(401);
     });
