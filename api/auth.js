@@ -43,14 +43,6 @@ auth.post("/register", async (req, res) => {
 auth.post("/login", async (req, res, next) => {
   try {
     // if user exist, check if token expired
-    console.log(
-      "cookie:",
-      req.get("Cookie"),
-      "req.session.user :",
-      req.session.user,
-      "headers:",
-      req.headers
-    );
     if (req.get("Cookie") && req?.session?.user?.OAuthToken) {
       const verifyToken = jwtSignCheck(req.session.user.OAuthToken, res);
       if (verifyToken) {
@@ -88,6 +80,11 @@ auth.post("/login", async (req, res, next) => {
       expiresIn: "1h",
     });
 
+    /**
+     * Generate session id
+     * Add data into session
+     * Save session with data
+     */
     req.session.regenerate(function (err) {
       if (err) next(err);
 
@@ -105,13 +102,19 @@ auth.post("/login", async (req, res, next) => {
       });
     });
   } catch (error) {
-    console.log('error', error);
+    console.log("error", error);
     res.status(500).json({ error: error.message });
   }
 });
 
 // User logout
 auth.post("/logout", requireAuth, async (req, res) => {
+  /**
+   * Clear session data
+   * Save cleared session
+   * Regenerate session id
+   */
+
   req.session.user = null;
   res.clearCookie("Cookie");
   req.session.save(function (err) {
