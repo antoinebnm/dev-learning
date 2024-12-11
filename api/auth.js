@@ -51,7 +51,7 @@ auth.post("/login", async (req, res, next) => {
       "headers:",
       req.headers
     );
-    if (req.get("Cookie") && req.session.user && req.session.user.OAuthToken) {
+    if (req.get("Cookie") && req?.session?.user?.OAuthToken) {
       const verifyToken = jwtSignCheck(req.session.user.OAuthToken, res);
       if (verifyToken) {
         // token not expired
@@ -105,7 +105,7 @@ auth.post("/login", async (req, res, next) => {
       });
     });
   } catch (error) {
-    console.log(error);
+    console.log('error', error);
     res.status(500).json({ error: error.message });
   }
 });
