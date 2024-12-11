@@ -5,17 +5,27 @@ const bcrypt = require("bcrypt");
 const jwt = require("jsonwebtoken");
 const jwtSignCheck = require("../middlewares/jwtsigncheck");
 const requireAuth = require("../middlewares/requireAuth");
-const getCookie = require("../middlewares/getCookie");
+const getHeader = require("../middlewares/getHeader");
 require("dotenv").config();
 
 // User registration
 auth.post("/register", async (req, res) => {
   try {
-    const { username, password } = req.body;
+    if (
+      req.headers.login == undefined ||
+      req.headers.password == undefined ||
+      req.headers.displayname == undefined
+    ) {
+      throw new Error("No Authenticate Header");
+    }
+    const login = req.headers.login; // Retreive info on login
+    const password = req.headers.password; // Retreive info on password
+    const username = req.headers.displayname;
+
     const hashedPassword = await bcrypt.hash(password, 10);
     const user = new User({
       displayName: username,
-      credentials: { login: username, password: hashedPassword },
+      credentials: { login: login, password: hashedPassword },
       addedAt: new Date(),
       gamesPlayed: [],
     });
@@ -33,7 +43,15 @@ auth.post("/register", async (req, res) => {
 auth.post("/login", async (req, res, next) => {
   try {
     // if user exist, check if token expired
-    if (req.session.user) {
+    console.log(
+      "cookie:",
+      req.get("Cookie"),
+      "req.session.user :",
+      req.session.user,
+      "headers:",
+      req.headers
+    );
+    if (req.get("Cookie") && req.session.user && req.session.user.OAuthToken) {
       const verifyToken = jwtSignCheck(req.session.user.OAuthToken, res);
       if (verifyToken) {
         // token not expired
@@ -42,10 +60,14 @@ auth.post("/login", async (req, res, next) => {
       // else, continue with basic login
     }
 
-    const { username, password } = req.body; // Retreive info on login
+    if (req.headers.login == undefined || req.headers.password == undefined) {
+      throw new Error("No Authenticate Header");
+    }
+    const login = req.headers.login; // Retreive info on login
+    const password = req.headers.password; // Retreive info on password
 
     // connect using login/password verification
-    const user = await User.findOne({ "credentials.login": username });
+    const user = await User.findOne({ "credentials.login": login });
     if (!user) {
       return res.status(401).json({
         error: "Authentication failed, invalid username.",
@@ -83,6 +105,7 @@ auth.post("/login", async (req, res, next) => {
       });
     });
   } catch (error) {
+    console.log(error);
     res.status(500).json({ error: error.message });
   }
 });
@@ -108,10 +131,10 @@ auth.post("/log", async (req, res) => {
   console.log(">>>> Session Info", req.session);
   console.log(
     ">>>> Request Cookie(s)",
-    getCookie(req, res) ? "exist" : "inexistent"
+    getHeader(req, res) ? "exist" : "inexistent"
   );
 
-  res.status(200).json(getCookie(req, res));
+  res.status(200).json(getHeader(req, res));
 });
 
 auth.post("/preload", requireAuth, async (req, res) => {

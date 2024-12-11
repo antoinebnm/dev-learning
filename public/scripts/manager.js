@@ -9,10 +9,12 @@ const accountMenu = document.getElementById("accountMenu");
 const userProfil = document.getElementById("userProfil");
 const switchAuth = document.getElementById("switchAuth");
 
-const usernameField = document.getElementById("username");
-const displaynameField = document.getElementById("displayname");
-const passwordField = document.getElementById("password");
-const confirmpwdField = document.getElementById("confirmpwd");
+const fields = {
+  usernameField: document.getElementById("username"),
+  displaynameField: document.getElementById("displayname"),
+  passwordField: document.getElementById("password"),
+  confirmpwdField: document.getElementById("confirmpwd"),
+};
 
 const sid = getCookie("sid") || null;
 if (sid) {
@@ -21,6 +23,19 @@ if (sid) {
       toggleUserProfil(name);
     })
     .catch((err) => {});
+}
+
+function clearFields(array) {
+  array.forEach((element) => {
+    element.value = "";
+  });
+}
+
+function switchFields(array, hide = true) {
+  array.forEach((element) => {
+    element.required = !hide;
+    element.hidden = hide;
+  });
 }
 
 function toggleUserProfil(name) {
@@ -33,18 +48,14 @@ function toggleUserProfil(name) {
 // Fonction pour ouvrir le popup
 function openPopup(type) {
   if (type == "register") {
-    displaynameField.hidden = false;
-    displaynameField.required = true;
-    confirmpwdField.hidden = false;
-    confirmpwdField.required = true;
+    switchFields([fields.displaynameField, fields.confirmpwdField], false);
+
     switchAuth.innerHTML = `Already have an account ?</br>
   > Log in here instead <`;
     switchAuth.addEventListener("click", () => openPopup("login"));
   } else {
-    displaynameField.hidden = true;
-    displaynameField.required = false;
-    confirmpwdField.hidden = true;
-    confirmpwdField.required = false;
+    switchFields([fields.displaynameField, fields.confirmpwdField], true);
+
     switchAuth.innerHTML = `First time here ?</br>
   > Register for free <`;
     switchAuth.addEventListener("click", () => openPopup("register"));
@@ -76,43 +87,40 @@ authForm.addEventListener("submit", (event) => {
   // Ajouter la logique de connexion/inscription ici
   const action = authTitle.textContent == "Login" ? "login" : "register";
   try {
-    let body;
+    let headers = {};
     if (action == "register") {
-      body = {
-        username: usernameField.value,
-        displayName: displaynameField.value,
-        password: passwordField.value,
-        confirmpwd: confirmpwdField.value,
-      };
-    } else {
-      body = {
-        username: usernameField.value,
-        password: passwordField.value,
-      };
-    }
-    console.log(body);
-
-    fetchData(`api/auth/${action}`, body).then((data) => {
-      console.log(data);
-      if (data["OAuthToken"]) {
-        toggleUserProfil(data["displayName"]);
+      if (fields.passwordField.value != fields.confirmpwdField.value) {
+        throw new Error(
+          "Passwords must be the same (password confirmation is different)"
+        );
       }
-    });
+
+      headers["Login"] = fields.usernameField.value;
+      headers["Password"] = fields.passwordField.value;
+      headers["DisplayName"] = fields.displaynameField.value;
+    } else {
+      headers["Login"] = fields.usernameField.value;
+      headers["Password"] = fields.passwordField.value;
+    }
+
+    fetchData(`api/auth/${action}`, undefined, undefined, headers).then(
+      (data) => {
+        if (data["OAuthToken"]) {
+          toggleUserProfil(data["displayName"]);
+        }
+      }
+    );
+
+    clearFields(Object.values(fields));
+    switchFields([fields.displaynameField, fields.confirmpwdField], true);
+    fields.confirmpwdField.classList.remove("wrong");
+
+    closePopup();
   } catch (error) {
-    myRedirect("/", "index", "redirect");
-    console.log(error + "Something went wrong!");
+    if (error.message.startsWith("Passwords")) {
+      fields.confirmpwdField.className = "wrong";
+    }
+    console.log(error);
+    //myRedirect("/");
   }
-
-  // clear fields
-  usernameField.value = "";
-  displaynameField.value = "";
-  displaynameField.required = false;
-  displaynameField.hidden = true;
-
-  passwordField.value = "";
-  confirmpwdField.value = "";
-  confirmpwdField.required = false;
-  confirmpwdField.hidden = true;
-
-  closePopup();
 });

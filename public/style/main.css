@@ -196,11 +196,34 @@ body {
   margin-top: 1rem;
 }
 
-input[type="text"] {
+input {
   padding: 0.5rem;
   font-size: 1rem;
   border: 1px solid #ccc;
   border-radius: 5px;
+}
+
+.wrong {
+  border: 1px solid #dd1919;
+  animation: horizontal-shaking 0.3s ease-in-out;
+}
+
+@keyframes horizontal-shaking {
+  0% {
+    transform: translateX(0);
+  }
+  25% {
+    transform: translateX(10px);
+  }
+  50% {
+    transform: translateX(-10px);
+  }
+  75% {
+    transform: translateX(10px);
+  }
+  100% {
+    transform: translateX(0);
+  }
 }
 
 footer {

@@ -1,12 +1,12 @@
-var myRedirect = function (redirectUrl, arg, value) {
+var myRedirect = function (redirectUrl) {
   var f = document.createElement("form");
   f.action = redirectUrl;
   f.method = "POST";
 
   var i = document.createElement("input");
   i.type = "hidden";
-  i.name = arg;
-  i.value = value + document.documentElement.outerHTML;
+  i.name = "redirect";
+  i.value = "true";
   f.appendChild(i);
 
   document.body.appendChild(f);

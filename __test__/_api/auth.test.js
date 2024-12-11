@@ -1,12 +1,17 @@
+const mockSession = require("../utils/mockSession");
+mockSession();
+
 const request = require("supertest");
 const bcrypt = require("bcrypt");
-const User = require("../../models/User");
+
 const { createServer } = require("../utils/api.server");
 const {
   mongoSetup,
   mongoTeardown,
   mongoServer,
 } = require("../utils/mongoMemory.server");
+
+const User = require("../../models/User");
 
 let app, server, testUser;
 
@@ -33,7 +38,11 @@ describe("Authentication", () => {
     it("should register a new user", async () => {
       const response = await request(app)
         .post("/api/auth/register")
-        .send({ username: "testUser", password: "test123" })
+        .set({
+          Login: "testUser",
+          Password: "test123",
+          DisplayName: "TestUser",
+        })
         .expect(201);
 
       expect(response.body.message).toBe("User registered successfully");
@@ -44,7 +53,7 @@ describe("Authentication", () => {
 
   describe("POST /login", () => {
     beforeEach(async () => {
-      // Create a test user
+      // Create a test user for auth tests
       testUser = new User({
         displayName: "TestUser",
         credentials: {
@@ -54,6 +63,7 @@ describe("Authentication", () => {
         addedAt: new Date(),
         gamesPlayed: [],
       });
+      // save in DB the testUser before each use
       testUser.save();
     });
 
@@ -65,28 +75,38 @@ describe("Authentication", () => {
     it("should login an existing user", async () => {
       const response = await request(app)
         .post("/api/auth/login")
-        .send({ username: "testUser", password: "test123" })
+        .set({ Login: "testUser", Password: "test123" })
         .expect(200);
 
       expect(response.body.userInfo).toBeDefined();
       expect(response.body.userInfo.displayName).toBe("TestUser");
     });
-    /*
+
     it("should throw an error when user already logged in", async () => {
+      // Pre query to get valid oauth token
+      const preQuery = await request(app)
+        .post("/api/auth/login")
+        .set({ Login: "testUser", Password: "test123" })
+        .expect(200);
+
+      const validToken = preQuery.body.userInfo.OAuthToken;
+
+      // Mock valid token in request session
+      mockSession({ user: { OAuthToken: validToken } });
+
+      // Attempt to log in again, using session cookie and token
       const response = await request(app)
         .post("/api/auth/login")
-        .set({ Cookie: 'sid=something' })
-        .send({  })
+        .set({ Cookie: "sid=somesessioncookie" })
         .expect(500);
 
-      expect(response.body).toBeDefined();
-      expect(response.body).toBe("User already logged in!");
-    });*/
+      expect(response.body.error).toBe("User already logged in!");
+    });
 
     it("should fail when using wrong username", async () => {
       const response = await request(app)
         .post("/api/auth/login")
-        .send({ username: "failUser", password: "test123" })
+        .set({ Login: "failUser", Password: "test123" })
         .expect(401);
 
       expect(response.body).toEqual({
@@ -97,7 +117,7 @@ describe("Authentication", () => {
     it("should fail when using wrong password", async () => {
       const response = await request(app)
         .post("/api/auth/login")
-        .send({ username: "testUser", password: "wrongPassword" })
+        .set({ Login: "testUser", Password: "wrongPassword" })
         .expect(401);
 
       expect(response.body).toEqual({
