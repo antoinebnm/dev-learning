@@ -1,8 +1,7 @@
-const mockSession = require("../utils/mockSession");
-mockSession();
-
 const request = require("supertest");
 const bcrypt = require("bcrypt");
+
+jest.mock('express-session');
 
 const { createServer } = require("../utils/api.server");
 const {
@@ -13,7 +12,7 @@ const {
 
 const User = require("../../models/User");
 
-let app, server, testUser;
+let app, server, sessionManager , testUser;
 
 describe("Authentication", () => {
   beforeAll(async () => {
@@ -21,6 +20,7 @@ describe("Authentication", () => {
     const serverSetup = await createServer(); // Start the server and MongoMemoryServer
     app = serverSetup.app;
     server = serverSetup.server;
+    sessionManager = serverSetup.sessionManager;
   });
 
   afterAll(async () => {
@@ -92,7 +92,7 @@ describe("Authentication", () => {
       const validToken = preQuery.body.userInfo.OAuthToken;
 
       // Mock valid token in request session
-      mockSession({ user: { OAuthToken: validToken } });
+      sessionManager.setMockSessionData({ user: { OAuthToken: validToken } });
 
       // Attempt to log in again, using session cookie and token
       const response = await request(app)

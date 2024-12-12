@@ -4,7 +4,7 @@
   "description": "Learning Repo for Languages, Methods, Coding",
   "main": "scripts/index.js",
   "scripts": {
-    "test": "jest --reporters='default' --detectOpenHandles --verbose --runInBand",
+    "test": "JWT_SECRET=jwtsecret jest --reporters='default' --detectOpenHandles --verbose --runInBand",
     "start": "node ./bin/www",
     "devstart": "nodemon ./bin/www",
     "serverstart": "DEBUG=express:* npm run devstart"
