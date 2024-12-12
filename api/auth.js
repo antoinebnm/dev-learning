@@ -11,16 +11,13 @@ require("dotenv").config();
 // User registration
 auth.post("/register", async (req, res) => {
   try {
-    if (
-      req.headers.login == undefined ||
-      req.headers.password == undefined ||
-      req.headers.displayname == undefined
-    ) {
-      throw new Error("No Authenticate Header");
-    }
     const login = req.headers.login; // Retreive info on login
     const password = req.headers.password; // Retreive info on password
     const username = req.headers.displayname;
+
+    if (!login || !password || !username) {
+      throw new Error("No Authenticate Header");
+    }
 
     const hashedPassword = await bcrypt.hash(password, 10);
     const user = new User({
@@ -43,7 +40,7 @@ auth.post("/register", async (req, res) => {
 auth.post("/login", async (req, res, next) => {
   try {
     // if user exist, check if token expired
-    if (req.get("Cookie") && req?.session?.user?.OAuthToken) {
+    if (req?.session?.user?.OAuthToken) {
       const verifyToken = jwtSignCheck(req.session.user.OAuthToken, res);
       if (verifyToken) {
         // token not expired
@@ -52,7 +49,7 @@ auth.post("/login", async (req, res, next) => {
       // else, continue with basic login
     }
 
-    if (req.headers.login == undefined || req.headers.password == undefined) {
+    if (!req.headers.login || !req.headers.password) {
       throw new Error("No Authenticate Header");
     }
     const login = req.headers.login; // Retreive info on login
@@ -102,7 +99,6 @@ auth.post("/login", async (req, res, next) => {
       });
     });
   } catch (error) {
-    console.log("error", error);
     res.status(500).json({ error: error.message });
   }
 });
@@ -115,9 +111,8 @@ auth.post("/logout", requireAuth, async (req, res) => {
    * Regenerate session id
    */
 
-  req.session.user = null;
   res.clearCookie("Cookie");
-  req.session.save(function (err) {
+  req.session.destroy(function (err) {
     if (err) next(err);
 
     // regenerate the session, which is good practice to help

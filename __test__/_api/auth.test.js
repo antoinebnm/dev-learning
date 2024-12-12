@@ -1,7 +1,7 @@
 const request = require("supertest");
 const bcrypt = require("bcrypt");
 
-jest.mock('express-session');
+jest.mock("express-session");
 
 const { createServer } = require("../utils/api.server");
 const {
@@ -12,7 +12,7 @@ const {
 
 const User = require("../../models/User");
 
-let app, server, sessionManager , testUser;
+let app, server, sessionManager, testUser;
 
 describe("Authentication", () => {
   beforeAll(async () => {
@@ -70,6 +70,7 @@ describe("Authentication", () => {
     afterEach(async () => {
       // Clean DB after each use
       await User.deleteMany({});
+      sessionManager.setMockSessionData({});
     });
 
     it("should login an existing user", async () => {
@@ -125,6 +126,29 @@ describe("Authentication", () => {
       });
     });
   });
+
+  /*describe('POST /logout', () => {
+    it("should throw an error when user already logged in", async () => {
+      // Pre query to get valid oauth token
+      const preQuery = await request(app)
+        .post("/api/auth/login")
+        .set({ Login: "testUser", Password: "test123" })
+        .expect(200);
+
+      const validToken = preQuery.body.userInfo.OAuthToken;
+
+      // Mock valid token in request session
+      sessionManager.setMockSessionData({ user: { OAuthToken: validToken } });
+
+      // Attempt to log in again, using session cookie and token
+      const response = await request(app)
+        .post("/api/auth/login")
+        .set({ Cookie: "sid=somesessioncookie" })
+        .expect(500);
+
+      expect(response.body.error).toBe("User already logged in!");
+    });
+  });*/
 
   describe("POST /preload", () => {
     beforeEach(async () => {
