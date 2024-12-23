@@ -21,16 +21,28 @@ const fields = {
   confirmpwdField: document.getElementById("confirmpwd"),
 };
 
-const sid = getCookie("sid") || null;
-if (sid) {
-  fetchData("/api/auth/preload", undefined, undefined, { Cookie: sid })
-    .then((name) => {
-      toggleUserProfil(name);
-    })
-    .catch((err) => {});
-} else {
-  toggleAuthButtons();
+async function preload() {
+  try {
+    const sid = getCookie("sid") || null;
+    if (sid) {
+      const data = await fetchData("/api/auth/preload", undefined, undefined, {
+        Cookie: sid,
+      });
+      if (data.name == "Error") {
+        throw new Error(
+          "preload error, surely due to a server restart (=> ereased memory sessions, need to clear cookies)"
+        );
+      }
+      toggleUserProfil(data);
+    } else {
+      toggleAuthButtons();
+    }
+  } catch (error) {
+    console.log(error);
+  }
 }
+
+preload();
 
 function clearFields(array) {
   array.forEach((element) => {
