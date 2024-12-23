@@ -112,7 +112,7 @@ describe("Authentication", () => {
         .expect(401);
 
       expect(response.body).toEqual({
-        error: "Authentication failed, invalid username.",
+        error: "Authentication failed, invalid credentials.",
       });
     });
 
@@ -123,7 +123,7 @@ describe("Authentication", () => {
         .expect(401);
 
       expect(response.body).toEqual({
-        error: "Authentication failed, invalid password.",
+        error: "Authentication failed, invalid credentials.",
       });
     });
   });

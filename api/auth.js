@@ -52,12 +52,10 @@ auth.post("/register", async (req, res) => {
       // load does not happen before session is saved
       req.session.save(function (err) {
         if (err) return next(err);
-        res
-          .status(201)
-          .json({
-            userInfo: req.session.user,
-            message: "User registered successfully",
-          });
+        res.status(201).json({
+          userInfo: req.session.user,
+          message: "User registered successfully",
+        });
       });
     });
   } catch (error) {
@@ -89,7 +87,7 @@ auth.post("/login", async (req, res, next) => {
     const user = await User.findOne({ "credentials.login": login });
     if (!user) {
       return res.status(401).json({
-        error: "Authentication failed, invalid username.",
+        error: "Authentication failed, invalid credentials.",
       });
     }
     const passwordMatch = await bcrypt.compare(
@@ -98,7 +96,7 @@ auth.post("/login", async (req, res, next) => {
     );
     if (!passwordMatch) {
       return res.status(401).json({
-        error: "Authentication failed, invalid password.",
+        error: "Authentication failed, invalid credentials.",
       });
     }
 
@@ -141,16 +139,11 @@ auth.post("/logout", requireAuth, async (req, res) => {
    * Regenerate session id
    */
 
-  res.clearCookie("Cookie");
+  res.clearCookie("sid");
   req.session.destroy(function (err) {
     if (err) next(err);
 
-    // regenerate the session, which is good practice to help
-    // guard against forms of session fixation
-    req.session.regenerate(function (err) {
-      if (err) next(err);
-      res.status(200).redirect("/");
-    });
+    res.status(200).redirect("/");
   });
 });
 

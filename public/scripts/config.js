@@ -32,7 +32,7 @@ var fetchData = async (url = "/", body = {}, method = "POST", headers = {}) => {
 
     return json;
   } catch (error) {
-    console.error("Error:", error.message);
+    return error;
   }
 };
 

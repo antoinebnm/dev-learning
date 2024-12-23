@@ -1,13 +1,18 @@
 // Sélection des éléments du DOM
 const loginButton = document.getElementById("loginButton");
 const registerButton = document.getElementById("registerButton");
-const authPopup = document.getElementById("authPopup");
 const closeBtn = document.querySelector(".close-btn");
+
+const authButtons = document.querySelector(".auth-buttons");
+const authPopup = document.getElementById("authPopup");
 const authTitle = document.getElementById("authTitle");
 const authForm = document.getElementById("authForm");
+
 const accountMenu = document.getElementById("accountMenu");
 const userProfil = document.getElementById("userProfil");
 const switchAuth = document.getElementById("switchAuth");
+
+const accLogout = document.getElementById("accLogout");
 
 const fields = {
   usernameField: document.getElementById("username"),
@@ -23,6 +28,8 @@ if (sid) {
       toggleUserProfil(name);
     })
     .catch((err) => {});
+} else {
+  toggleAuthButtons();
 }
 
 function clearFields(array) {
@@ -39,11 +46,15 @@ function switchFields(array, hide = true) {
 }
 
 function toggleUserProfil(name) {
-  loginButton.hidden = true;
-  registerButton.hidden = true;
+  authButtons.hidden = true;
   accountMenu.hidden = false;
 
   userProfil.textContent = name;
+}
+
+function toggleAuthButtons() {
+  authButtons.hidden = false;
+  accountMenu.hidden = true;
 }
 
 // Fonction pour ouvrir le popup
@@ -75,6 +86,12 @@ loginButton.addEventListener("click", () => openPopup("login"));
 registerButton.addEventListener("click", () => openPopup("register"));
 closeBtn.addEventListener("click", closePopup);
 
+accLogout.addEventListener("click", () => {
+  fetchData("/api/auth/logout").then(() => {
+    window.location.reload();
+  });
+});
+
 // Fermer le popup si on clique en dehors du contenu
 window.addEventListener("click", (event) => {
   if (event.target === authPopup) {
@@ -83,7 +100,7 @@ window.addEventListener("click", (event) => {
 });
 
 // Soumission du formulaire d'authentification
-authForm.addEventListener("submit", (event) => {
+authForm.addEventListener("submit", async (event) => {
   event.preventDefault();
   // Ajouter la logique de connexion/inscription ici
   const action = authTitle.textContent == "Login" ? "login" : "register";
@@ -104,16 +121,24 @@ authForm.addEventListener("submit", (event) => {
       headers["Password"] = fields.passwordField.value;
     }
 
-    fetchData(`api/auth/${action}`, undefined, undefined, headers).then(
-      (data) => {
-        if (data["OAuthToken"]) {
-          toggleUserProfil(data["displayName"]);
-        }
-      }
+    const data = await fetchData(
+      `api/auth/${action}`,
+      undefined,
+      undefined,
+      headers
     );
+    if (data?.message == "Response status: 401") {
+      throw new Error("Invalid credentials !");
+    }
+    if (data?.userInfo) {
+      toggleUserProfil(data.userInfo.displayName);
+    }
 
+    // Clear fields and classes when all cases are verified
     clearFields(Object.values(fields));
     switchFields([fields.displaynameField, fields.confirmpwdField], true);
+    fields.usernameField.classList.remove("wrong");
+    fields.passwordField.classList.remove("wrong");
     fields.confirmpwdField.classList.remove("wrong");
 
     closePopup();
@@ -121,7 +146,10 @@ authForm.addEventListener("submit", (event) => {
     if (error.message.startsWith("Passwords")) {
       fields.confirmpwdField.className = "wrong";
     }
-    console.log(error);
+    if (error.message.startsWith("Invalid")) {
+      fields.usernameField.className = "wrong";
+      fields.passwordField.className = "wrong";
+    }
     //myRedirect("/");
   }
 });
