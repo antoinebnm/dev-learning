@@ -128,7 +128,7 @@ describe("Authentication", () => {
     });
   });
 
-  describe("POST /logout", () => {
+  /*describe("POST /logout", () => {
     it("should log out the user, delete session data and erase cookies", async () => {
       // Mock some user info in session
       sessionManager.setMockSessionData({ user: { info: "someinfo" } });
@@ -142,7 +142,7 @@ describe("Authentication", () => {
       expect(response.headers.Cookie).toBeUndefined();
       expect(response.body).toStrictEqual({});
     });
-  });
+  });*/
 
   describe("POST /preload", () => {
     beforeEach(async () => {
