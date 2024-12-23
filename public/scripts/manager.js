@@ -30,7 +30,7 @@ async function preload() {
       });
       if (data.name == "Error") {
         throw new Error(
-          "preload error, surely due to a server restart (=> ereased memory sessions, need to clear cookies)"
+          "preload error, surely due to a server restart (=> erased memory sessions, need to clear cookies)"
         );
       }
       toggleUserProfil(data);
@@ -39,6 +39,8 @@ async function preload() {
     }
   } catch (error) {
     console.log(error);
+    eraseCookie("sid");
+    window.location.reload();
   }
 }
 

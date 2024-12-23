@@ -45,6 +45,11 @@ var getCookie = function (name) {
   return null;
 };
 
+var eraseCookie = function (name) {
+  document.cookie = name + "=; expires=Thu, 01-Jan-1970 00:00:01 GMT;";
+  return null;
+};
+
 // 1371 words
 const wordList = [
   "Abalone",
