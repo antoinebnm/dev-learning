@@ -128,28 +128,21 @@ describe("Authentication", () => {
     });
   });
 
-  /*describe('POST /logout', () => {
-    it("should throw an error when user already logged in", async () => {
-      // Pre query to get valid oauth token
-      const preQuery = await request(app)
-        .post("/api/auth/login")
-        .set({ Login: "testUser", Password: "test123" })
-        .expect(200);
-
-      const validToken = preQuery.body.userInfo.OAuthToken;
-
-      // Mock valid token in request session
-      sessionManager.setMockSessionData({ user: { OAuthToken: validToken } });
+  describe("POST /logout", () => {
+    it("should log out the user, delete session data and erase cookies", async () => {
+      // Mock some user info in session
+      sessionManager.setMockSessionData({ user: { info: "someinfo" } });
 
       // Attempt to log in again, using session cookie and token
       const response = await request(app)
-        .post("/api/auth/login")
+        .post("/api/auth/logout")
         .set({ Cookie: "sid=somesessioncookie" })
-        .expect(500);
+        .expect(200);
 
-      expect(response.body.error).toBe("User already logged in!");
+      expect(response.headers.Cookie).toBeUndefined();
+      expect(response.body).toStrictEqual({});
     });
-  });*/
+  });
 
   describe("POST /preload", () => {
     beforeEach(async () => {
@@ -169,10 +162,24 @@ describe("Authentication", () => {
     afterEach(async () => {
       // Clean DB after each use
       await User.deleteMany({});
+      sessionManager.setMockSessionData({});
     });
 
     it("should not pass requireAuth middleware without session cookies", async () => {
       await request(app).post("/api/auth/preload").expect(401);
+    });
+
+    it("should preload when session and cookies are active", async () => {
+      // Mock valid user session
+      sessionManager.setMockSessionData({ user: { displayName: "TestUser" } });
+
+      // Attempt to log in again, using session cookie and token
+      const response = await request(app)
+        .post("/api/auth/preload")
+        .set({ Cookie: "sid=somesessioncookie" })
+        .expect(200);
+
+      expect(response.body).toBe("TestUser");
     });
   });
 });

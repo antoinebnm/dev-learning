@@ -142,8 +142,9 @@ auth.post("/logout", requireAuth, async (req, res) => {
   res.clearCookie("sid");
   req.session.destroy(function (err) {
     if (err) next(err);
+    req.session = {};
 
-    res.status(200).redirect("/");
+    res.status(200).json(req.session);
   });
 });
 
