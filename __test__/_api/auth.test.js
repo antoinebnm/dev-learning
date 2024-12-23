@@ -45,6 +45,7 @@ describe("Authentication", () => {
         })
         .expect(201);
 
+      expect(response.body.userInfo).toBeDefined();
       expect(response.body.message).toBe("User registered successfully");
       const userInDb = await User.findOne({ "credentials.login": "testUser" });
       expect(userInDb).toBeDefined();

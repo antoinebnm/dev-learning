@@ -18,7 +18,7 @@ const fields = {
 
 const sid = getCookie("sid") || null;
 if (sid) {
-  fetchData("/api/auth/preload", {}, "POST", { Cookie: sid })
+  fetchData("/api/auth/preload", undefined, undefined, { Cookie: sid })
     .then((name) => {
       toggleUserProfil(name);
     })
@@ -41,6 +41,7 @@ function switchFields(array, hide = true) {
 function toggleUserProfil(name) {
   loginButton.hidden = true;
   registerButton.hidden = true;
+  accountMenu.hidden = false;
 
   userProfil.textContent = name;
 }

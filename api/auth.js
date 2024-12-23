@@ -28,8 +28,38 @@ auth.post("/register", async (req, res) => {
     });
 
     await user.save();
-    req.session.userId = user._id; // Set session identifier
-    res.status(201).json({ message: "User registered successfully" });
+
+    //userId => Payload res
+    const OAuthToken = jwt.sign({ userId: user._id }, process.env.JWT_SECRET, {
+      expiresIn: "1h",
+    });
+
+    /**
+     * Generate session id
+     * Add data into session
+     * Save session with data
+     */
+    req.session.regenerate(function (err) {
+      if (err) next(err);
+
+      // store user information in session, typically a user id
+      req.session.user = {
+        OAuthToken: OAuthToken,
+        displayName: user.displayName,
+      };
+
+      // save the session before redirection to ensure page
+      // load does not happen before session is saved
+      req.session.save(function (err) {
+        if (err) return next(err);
+        res
+          .status(201)
+          .json({
+            userInfo: req.session.user,
+            message: "User registered successfully",
+          });
+      });
+    });
   } catch (error) {
     console.error("Error in /register:", error.message);
     res.status(500).json({ error: "Registration failed" });
